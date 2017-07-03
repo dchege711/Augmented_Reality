@@ -28,5 +28,5 @@
 ------
 
 ## Sources
-* [Goldman Sachs, Jan 2016]((http://www.goldmansachs.com/our-thinking/pages/technology-driving-innovation-folder/virtual-and-augmented-reality/report.pdf)
+* [Goldman Sachs, Jan 2016](http://www.goldmansachs.com/our-thinking/pages/technology-driving-innovation-folder/virtual-and-augmented-reality/report.pdf)
 * [Woodside Capital Partners, June 2016](http://www.woodsidecap.com/wp-content/uploads/2016/06/Augmented-Reality-Report-FINAL.pdf)
