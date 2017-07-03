@@ -7,6 +7,7 @@
 * Augmented reality is using digital information to enhance an experience in our physical world.
 * Examples include a camera's view finder, a head mounted display like the HoloLens, etc.
 * VR is different, in that a computer is making all the things you see, hear or even touch.
+* Rule of Thumb: *Transparent Headset? AR! Opaque Headset? VR!*
 * Mixed Reality is a blend, e.g. physical objects in the room being mapped to virtual ones.
 * Ideas about AR have existed since Sutherland ('65), but a couple of technological breakthroughs needed to happen:
 	* Powerful mobile devices to alleviate the need for tethered headsets.
