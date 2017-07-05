@@ -1,17 +1,26 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
 
 	// By making it public, we can make changes in the editor without recompiling the code
 	public float speed;		// Lest the ball be too slow
-	private Rigidbody rb;	// That's because we want to reference the rb in other functions
+	public Text countText;	// Used to display # of collectibles gathered to the game screen.
+	public Text winText;	// Lets the gamer know when they've won.
+
+	private Rigidbody rb;	
+	private int count;	// Keeps track of the number of collectibles collected
+
 
 	// Code under Start() is called in the first frame when the script is active
 	void Start(){
 		// This will find and return a reference to the attached Rigidbody, if there is one.
 		rb = GetComponent<Rigidbody>();
+		count = 0;
+		setCountText ();
+		winText.text = "";
 	}
 
 	// Update is called before rendering a frame
@@ -37,5 +46,21 @@ public class PlayerController : MonoBehaviour {
 
 		// AddForce is a function that allows application of forces to rigid bodies
 		rb.AddForce(movement * speed);
+	}
+
+	void OnTriggerEnter(Collider other) {
+		// CompareTag is more efficient than checking for equality using ==
+		if (other.gameObject.CompareTag ("Pick Up")) {
+			other.gameObject.SetActive (false);
+			count = count + 1;
+			setCountText ();
+			if (count == 12) {
+				winText.text = "You Win!";
+			}
+		}
+	}
+
+	void setCountText() {
+		countText.text = "Count: " + count.ToString ();
 	}
 }

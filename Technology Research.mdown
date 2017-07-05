@@ -1,0 +1,17 @@
+# Technology Research
+
+* To get a feel of how AR works, we set out to create an AR experience at the E-Quad.
+* As expected with Microsoft :angry: their tutorials are in Visual Studio. 
+* Download the requirements using the [instructions on this page](https://developer.microsoft.com/en-us/windows/mixed-reality/install_the_tools)
+
+## Building a Unity App
+* HoloLens can run a mixed reality app created in Unity.
+* I'll be following the guidelines specified [here](https://developer.microsoft.com/en-us/windows/mixed-reality/unity_development_overview)
+* I'll start by trying out the newbie tutorial, Roll-a-Ball
+
+## [Roll-a-Ball](https://unity3d.com/learn/tutorials/projects/roll-ball-tutorial)
+* The game has a ball, and 12 collectible cubes. 
+* The player wins once the ball touches all the cubes.
+* I've included a build for Windows in Roll_A_Ball/Builds here on Github
+* The next step is to port that to the HoloLens.
+
