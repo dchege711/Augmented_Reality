@@ -6,7 +6,6 @@
 
 ## Building a Unity App
 * HoloLens can run a mixed reality app created in Unity.
-* I'll be following the guidelines specified [here](https://developer.microsoft.com/en-us/windows/mixed-reality/unity_development_overview)
 * I'll start by trying out the newbie tutorial, Roll-a-Ball
 
 ## [Roll-a-Ball](https://unity3d.com/learn/tutorials/projects/roll-ball-tutorial)
@@ -15,3 +14,13 @@
 * I've included a build for Windows in Roll_A_Ball/Builds here on Github
 * The next step is to port that to the HoloLens.
 
+## [Porting to HoloLens](https://developer.microsoft.com/en-us/windows/mixed-reality/unity_development_overview)
+* So I couldn't get away with Windows 8.1; I had to upgrade to Windows 10 :angry:
+* As of my current understanding, there are 2 steps to developing AR content for the HoloLens:
+	* Developing 3D content using software like Unity. 
+		* You could potentially use lower-level language, but there'd be too much lifting.
+		* Unity uses C# and JavaScript for its script, so it's not like it's 100% new.
+		* However, Unity handles lower-level code like handling collisions between game objects, which is convenient.
+	* Presenting the 3D content using the HoloLens.
+		* In the simplest form, your app/game isn't aware of the surrounding. In this sense, it's using the HoloLens as it would a phone's screen.
+		* In the 'true AR' form, your app/game maps the surroundings and is aware of it. For example, robots can start emerging from the walls.
