@@ -3,31 +3,32 @@
 * Microsoft is quite dodgy with the specs, so I used this [guy's report](https://buildhololens.com/2016/05/04/detailed-hololens-hardware-specs/).
 * Here's a summary of the specifications that I thought may be relevant to Edge Lab:
 
-	## System
+	### System
 		* 2 GB Installed RAM
 		* 54.09 GB of Internal Storage Capacity
-	* CPU
+	### CPU
 		* Intel(R) Atom(TM) x5-Z8100P CPU @ 1.04 Ghz
 		* 32-bit x86 Instruction Set
 		* 4 Logical Processors
 		* No fans or heat sinks (at least not that we can see/hear)
-	* Holographic Processing Unit (HPU)
+	### Holographic Processing Unit (HPU)
 		* 1 GB of RAM
 		* This one's custom made for the HoloLens :open_mouth:
-	* Display
+	### Display
 		* 114 MB of dedicated video memory
 		* 980 MB of shared system memory
-	* Battery
+	### Battery
 		* 16,500 mWh
-	* Operating System
+	### Operating System
 		* Windows 10
 		* 900 MB of App Memory Usage Limit
-	* Camera
+	### Camera
 		* 2.4 MP (2048 x 1152) Resolution (Google Glass had 5 MP, HTC Vive has 2160 x 1200)
 		* 1.1 MP (1408 x  792) Video Resolution (Google Glass had 720p)
 		* 30 fps Video Speed
 		* 50 Hz Power Line Frequency
 		* 2 Special Cameras on each side: a depth camera & an ambient light sensor. 
-	* Storage Device
+	### Storage Device
 		* 64 GB Toshiba 064G32 (Google Glass had 12 GB)
-	* Wi-Fi & Bluetooth Enabled (So did Google Glass)
+	### Connectivity
+		* Wi-Fi & Bluetooth Enabled (So did Google Glass)
