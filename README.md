@@ -24,3 +24,7 @@
 
 ### Possible Research Questions
 * We'll suggest questions that may yield further insight into AR technologies.
+
+* Read on fog and AR
+* Comcast guest. Interested in fog. (Next Friday. Possibly. Telecom Perspective?)
+* Look at what people are saying about fog in blog posts.
