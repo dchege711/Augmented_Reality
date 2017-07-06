@@ -25,3 +25,8 @@
 		* In the simplest form, your app/game isn't aware of the surrounding. In this sense, it's using the HoloLens as it would a phone's screen.
 		* In the 'true AR' form, your app/game maps the surroundings and is aware of it. For example, robots can start emerging from the walls.
 * When porting an app to the HoloLens, ensure that your laptop and HoloLens are on the same WiFi network.
+
+## Building a HoloLens-Aware Unity App
+* Although Roll-a-Ball could be seen on the HoloLens, it had no awareness that it was a hologram.
+* I'll now follow the instructions at [Holograms 101](https://developer.microsoft.com/en-us/windows/mixed-reality/holograms_101).
+* This will help me understand gaze, gesture, voice, sound & spatial mapping.
