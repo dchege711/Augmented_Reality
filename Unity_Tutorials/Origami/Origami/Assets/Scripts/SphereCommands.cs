@@ -2,6 +2,13 @@
 
 public class SphereCommands : MonoBehaviour {
 
+	Vector3 originalPosition;	// Useful for restoration purposes
+
+	void Start() {
+		// Grab the original local position of the sphere when the app starts.
+		originalPosition = this.transform.localPosition;
+	}
+
 	// Called by GazeGestureManager when the user performs a Select gesture
 	void OnSelect()
 	{
@@ -12,5 +19,24 @@ public class SphereCommands : MonoBehaviour {
 			var rigidbody = this.gameObject.AddComponent<Rigidbody>();
 			rigidbody.collisionDetectionMode = CollisionDetectionMode.Continuous;
 		}
+	}
+
+	// Called by SpeechManager when the user says the "Reset World" command
+	void OnReset() {
+		// If the sphere has a Rigidbody component, remove it to disable physics.
+		// Use 'var' when you want the compiler to fetch the object type for you.
+		var rigidBody = this.GetComponent<Rigidbody>();
+		if (rigidBody != null) {
+			DestroyImmediate (rigidBody);
+		}
+
+		// Put the sphere back into its original local position
+		this.transform.localPosition = originalPosition;
+	}
+
+	// Called by SpeechManager when the user says the "Drop Sphere" command
+	void OnDrop() {
+		// Exploit that "Drop Sphere" is functionally equivalent to a Select gesture
+		OnSelect();
 	}
 }

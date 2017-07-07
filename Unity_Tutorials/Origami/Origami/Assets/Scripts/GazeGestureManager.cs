@@ -6,14 +6,23 @@ using UnityEngine.VR.WSA.Input;
 // This script can detect the HoloLens Select Gesture
 public class GazeGestureManager : MonoBehaviour {
 
-	public static GazeGestureManager Instance { get; private set; }
+	// Help! What does this exactly do?
+	public static GazeGestureManager Instance { 
+		get; 
+		private set; 
+	}
 
 	// Represents the hologram that is currently being gazed at.
 	public GameObject FocusedObject { get; private set; }
 
 	GestureRecognizer recognizer;
 
-	// Use this for initialization
+	// Awake() is only called: 
+	//		* Once during the lifetime of a script's instance.
+	// 		* Always called before any Start functions
+	//		* After all objects are initialized
+	// Use Awake to set up references between scripts.
+	// Use Start to pass any info back and forth.
 	void Awake()
 	{
 		Instance = this;
@@ -23,6 +32,8 @@ public class GazeGestureManager : MonoBehaviour {
 
 		// TappedEvent fires on finger release after a finger press & 
 		// after the system voice command "Select" has been processed.
+
+		// Look more into Lambda Expressions featuring =>
 		recognizer.TappedEvent += (source, tapCount, ray) =>
 		{
 			// Send an OnSelect message to the focused object and its ancestors.
@@ -59,7 +70,7 @@ public class GazeGestureManager : MonoBehaviour {
 			FocusedObject = null;
 		}
 
-		// If the focused object changed this frame,
+		// If the focused object changed in this frame,
 		// start detecting fresh gestures again.
 		if (FocusedObject != oldFocusObject)
 		{

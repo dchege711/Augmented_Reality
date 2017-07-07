@@ -56,8 +56,9 @@ public class CapturePhoto : MonoBehaviour {
 		if (result.success)
 		{
 			string filename = string.Format(@"CapturedImage{0}_n.jpg", Time.time);
-			string path = System.Environment.GetFolderPath (System.Environment.SpecialFolder.MyDocuments);
-			string filePath = System.IO.Path.Combine(path, filename);
+			// string path = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments);
+            string filePath = System.IO.Path.Combine(Application.persistentDataPath, filename);
+            // string filePath = System.IO.Path.Combine(path, filename);
 
 			photoCaptureObject.TakePhotoAsync(filePath, PhotoCaptureFileOutputFormat.PNG, OnCapturedPhotoToDisk);
 			Debug.Log (filePath);
