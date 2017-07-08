@@ -1,6 +1,6 @@
 ## Notes on [Origami (Holograms 101)](https://developer.microsoft.com/en-us/windows/mixed-reality/holograms_101)
 
-* I followed the tutorial linked above, but "'ve added lots of comments in the C# scripts.
+* I followed the tutorial linked above, but I've added lots of comments in the C# scripts.
 * These notes are useful for a person who knows Python/Java/JS, but new to C#.
 * The one (and only) scene in this project is the Origami Scene. Note the organization in the hierarchy.
 * To take any pictures of the holograms, use "Hey Cortana, take a picture."
