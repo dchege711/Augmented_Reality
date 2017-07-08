@@ -28,3 +28,4 @@
 * Read on fog and AR
 * Comcast guest. Interested in fog. (Next Friday. Possibly. Telecom Perspective?)
 * Look at what people are saying about fog in blog posts.
+-----
