@@ -15,6 +15,7 @@
 * These notes are useful for a person who knows Python/Java/JS, but new to C#.
 * The one (and only) scene in this project is the Origami Scene. Note the organization in the hierarchy.
 * To take any pictures of the holograms, use "Hey Cortana, take a picture."
+* In case Visual Studio 2017 seeks an update before compiling the project, get [Windows 10 SDK (ver. 10.0.15063.468)](https://developer.microsoft.com/en-us/windows/downloads/sdk-archive)
 #Insert Final Hierarchy
 
 ### Chapter 1 - 'Holo' World
