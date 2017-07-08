@@ -1,4 +1,4 @@
-# Unity Tutorials README
+# Unity Tutorials
 * To set up the development environment, follow [these instructions](https://developer.microsoft.com/en-us/windows/mixed-reality/install_the_tools).
 
 ----
