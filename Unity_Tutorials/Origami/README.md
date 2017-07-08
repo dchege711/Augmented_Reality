@@ -28,7 +28,7 @@
 ### Chapter 4 - Voice Input
 * This section adds support for 2 voice commands: "Reset World" and "Drop Sphere".
 * [SpeechManager.cs](Origami/Assets/Scripts/SpeechManager.cs) sets up a KeywordRecognizer for the 2 phrases. It's attached to the OrigamiCollection object.
-* I also updated SphereCommands.cs to be able to support calls from SpeechManager.cs
+* I also updated [SphereCommands.cs](Origami/Assets/Scripts/SphereCommands.cs) to be able to support calls from SpeechManager.cs
 
 ### Chapter 5 - Spatial Sound
 * This section adds ambient music and sound effects. It utilizes spatial sound for pseudo-location.
