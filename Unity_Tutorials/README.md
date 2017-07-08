@@ -18,10 +18,16 @@
 
 ----
 
-## [Origami](https://developer.microsoft.com/en-us/windows/mixed-reality/holograms_101)
+## [Origami (Holograms 101)](https://developer.microsoft.com/en-us/windows/mixed-reality/holograms_101)
 * The linked tutorial is an introduction to holograms and the capabilities of a hololens.
 * The tutorial is fast-paced with lots of copy-paste. Slow down and examine the code.
 * It introduces concepts such as gaze, gestures, voice input, spatial sound and spatial mapping.
 * I've included a README of the observations I made along the way. The C# scripts are heavily commeneted.
+
+----
+
+## Screenshots
+* In some of the tutorials, I took pictures of what I was seeing.
+* You don't need to open this folder; all relevant images have been presented at the appropriate context.
 
 ----
