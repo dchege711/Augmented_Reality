@@ -5,7 +5,12 @@
 * Some types of data lose value fast, e.g. an oil leak a minute ago could be a major oil spill right now.
 * The autonomous car [example](https://medium.com/iotforall/cloud-computing-vs-fog-computing-aa94cbc4b827): It's fine for your autonomous car to access Netflix & send logs, but to avoid a near-collision on the highway, the latency demand is best handled at the Edge.
 * The players in the game: [Azure IoT (now teamed up with Cisco Fog)](https://azure.microsoft.com/en-us/suites/iot-suite/) , [AWS Greengrass](https://aws.amazon.com/greengrass/) and [Android Things](https://developer.android.com/things/hardware/index.html).
-* The SCALE architecture offered by OpenFog architectures: Security (safe, trusted transactions), Cognition (awareness of objectives to enable autonomy), Agility (rapid innovation and affordable scaling), Latency (real-time processing) & Efficiency (pulling together local unused resources from participating end-user devices).
+* The SCALE architecture offered by OpenFog architectures: 
+    * Security (safe, trusted transactions)
+    * Cognition (awareness of objectives to enable autonomy)
+    * Agility (rapid innovation and affordable scaling)
+    * Latency (real-time processing) 
+    * Efficiency (pulling together local unused resources from participating end-user devices).
 * The complete OpenFog Reference Architecture for Fog Computing document can be found [here](https://www.openfogconsortium.org/wp-content/uploads/OpenFog_Reference_Architecture_2_09_17-FINAL-1.pdf)
 
 
