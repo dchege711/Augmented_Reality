@@ -1,7 +1,8 @@
 ## [An Introduction for the Uninitiated](https://www.openfogconsortium.org/wp-content/uploads/OpenFog-Reference-Architecture-Executive-Summary.pdf)
 * Here's a visual aid from a [IoT for All](https://iot-for-all.com/openfog-consortium-reference-architecture-executive-summary/):
-* ![Image from IoT Labs](https://cdn-images-1.medium.com/max/800/0*NtEQXRdirRTpWcOE.png)
-* Core idea: We don't need to push all the data to the cloud. By using local inexpensive fog nodes, we can save on latency (some data loses value fast, e.g. an oil leak a minute ago could be a major oil spill right now) and broadband costs.
+![Image from IoT Labs](https://cdn-images-1.medium.com/max/800/0*NtEQXRdirRTpWcOE.png)
+* Core idea: We don't need to push all the data to the cloud. By using local inexpensive fog nodes, we can save on latency and broadband costs.
+* Some types of data lose value fast, e.g. an oil leak a minute ago could be a major oil spill right now.
 * The autonomous car [example](https://medium.com/iotforall/cloud-computing-vs-fog-computing-aa94cbc4b827): It's fine for your autonomous car to access Netflix & send logs, but to avoid a near-collision on the highway, the latency demand is best handled at the Edge.
 * The players in the game: [Azure IoT (now teamed up with Cisco Fog)](https://azure.microsoft.com/en-us/suites/iot-suite/) , [AWS Greengrass](https://aws.amazon.com/greengrass/) and [Android Things](https://developer.android.com/things/hardware/index.html).
 * The SCALE architecture offered by OpenFog architectures: Security (safe, trusted transactions), Cognition (awareness of objectives to enable autonomy), Agility (rapid innovation and affordable scaling), Latency (real-time processing) & Efficiency (pulling together local unused resources from participating end-user devices).
