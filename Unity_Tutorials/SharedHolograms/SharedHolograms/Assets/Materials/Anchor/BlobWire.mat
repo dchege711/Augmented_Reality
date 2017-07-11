@@ -124,7 +124,7 @@ Material:
       second: {r: 0, g: 0, b: 0, a: 1}
     - first:
         name: _Offset
-      second: {r: 3.3407547, g: 0.16703774, b: 0, a: 0}
+      second: {r: 0.7432313, g: 0.037161566, b: 0, a: 0}
     - first:
         name: _WireColor
       second: {r: 0, g: 0.75172424, b: 1, a: 0.828}

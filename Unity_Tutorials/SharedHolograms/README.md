@@ -3,6 +3,18 @@
 * Sets up a holographic experience that can be shared across many HoloLens devices.
 
 ## Issues
+* Loading the Unity Project after downloading raises this exception:
+```
+System.Exception: Package directory not found: "C:\Users\dchege711\.nuget\packages\Microsoft.CSharp\4.0.1".
+  at UnityEditor.Scripting.Compilers.NuGetPackageResolver.Resolve () <0x2b8a370 + 0x0032b> in <filename unknown>:0 
+  at AssemblyUpdater.Core.AssemblyUpdaterContext.AddFrameworkFolderToSearchPath (Mono.Cecil.AssemblyDefinition assemblyDefinition, Mono.Cecil.DefaultAssemblyResolver resolver, IAPIUpdaterListener listener) <0x2b82778 + 0x00263> in <filename unknown>:0 
+  at AssemblyUpdater.Core.AssemblyUpdaterContext.ReadAssembly (System.String assemblyPath, IAPIUpdaterListener listener, FileAccess mode, System.String[] searchPaths) <0x2b801e8 + 0x00163> in <filename unknown>:0 
+  at AssemblyUpdater.Core.AssemblyUpdaterContext.From (System.String assemblyPath, IConfigurationProvider configuration, System.String[] assemblySearchPaths, UpdaterMode mode, IAPIUpdaterListener listener) <0x2b80100 + 0x00073> in <filename unknown>:0 
+  at AssemblyUpdater.Core.AssemblyUpdaterContext.From (System.String assemblyPath, System.String[] assemblySearchPaths, UpdaterMode mode, IAPIUpdaterListener listener) <0x2b800c0 + 0x0002f> in <filename unknown>:0 
+  at AssemblyUpdater.Application.Program.CheckForObsoleteAPIUsage (AssemblyUpdater.Application.CommandLineSpec config) <0x2b61890 + 0x00043> in <filename unknown>:0 
+  at AssemblyUpdater.Application.Program.Main (System.String[] args) <0x2b00f18 + 0x000fb> in <filename unknown>:0 
+UnityEditor.Scripting.APIUpdaterHelper:DoesAssemblyRequireUpgrade(String)
+```
 * Deploying to Visual Studio allows me to deploy to the HoloLens as a standalone app.
 * However, when I try to deploy from Unity to a Visual Studio .sln file, I get these 2 errors:
 ```
@@ -63,3 +75,4 @@ UnityEditor.HostView:OnGUI()
 * These errors persist even for the HoloLens apps that I deployed earlier. 
 * It seems this is a problem independent of the Unity scene that I'm working on.
 * For now, I'll keep working with a non-standalone Unity app (i.e. to run the app, the HoloLens will need to be tethered via WiFi).
+* 10.8.227.69
