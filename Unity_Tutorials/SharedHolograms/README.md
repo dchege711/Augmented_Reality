@@ -62,3 +62,4 @@ UnityEditor.HostView:OnGUI()
 ```
 * These errors persist even for the HoloLens apps that I deployed earlier. 
 * It seems this is a problem independent of the Unity scene that I'm working on.
+* For now, I'll keep working with a non-standalone Unity app (i.e. to run the app, the HoloLens will need to be tethered via WiFi).
