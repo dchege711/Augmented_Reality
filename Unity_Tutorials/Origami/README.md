@@ -4,7 +4,7 @@
 * These notes are useful for a person who knows Python/Java/JS, but new to C#.
 * The one (and only) scene in this project is the Origami Scene. Note the organization in the hierarchy.
 * To take any pictures of the holograms, use "Hey Cortana, take a picture."
-* ![My Image](https://github.com/dchege711/Augmented_Reality/blob/master/Unity_Tutorials/Screenshots/OrigamiScreenShot.PNG)
+* ![My Image](https://github.com/dchege711/Augmented_Reality/blob/master/Images/OrigamiScreenShot.PNG)
 
 ### Chapter 1 - 'Holo' World
 * The Main Camera for HoloApps has a pattern to it:
@@ -16,7 +16,7 @@
 ### Chapter 2 - Gaze
 * This section visualizes my gaze (where I'm currently looking) using a world-locked cursor.
 * There's a cursor object at the root level of the Origami Scene. The configurations are as follows:
-* ![Cursor Settings](https://github.com/dchege711/Augmented_Reality/blob/master/Unity_Tutorials/Screenshots/CursorSettings.PNG)
+* ![Cursor Settings](https://github.com/dchege711/Augmented_Reality/blob/master/Images/CursorSettings.PNG)
 * [WorldCursor.cs](Origami/Assets/Scripts/WorldCursor.cs) is used to control the cursor. 
 		 
 ### Chapter 3 - Gestures
@@ -33,12 +33,12 @@
 ### Chapter 5 - Spatial Sound
 * This section adds ambient music and sound effects. It utilizes spatial sound for pseudo-location.
 * The ambient music sound was set using the Unity GUI since the music doesn't change much.
-* ![OrigamiCollection_Sound](https://github.com/dchege711/Augmented_Reality/blob/master/Unity_Tutorials/Screenshots/OrigamiCollectionSound1.PNG)
+* ![OrigamiCollection_Sound](https://github.com/dchege711/Augmented_Reality/blob/master/Images/OrigamiCollectionSound1.PNG)
 * However, for the Sphere1 and Sphere2, sound was addded in [SphereSounds.cs](Origami/Assets/Scripts/SphereSounds.cs) and then attached.
 
 ### Chapter 6 - Spatial Mapping
 * To introduce a wireframe mesh into the real world, I dragged the Spatial Mapping asset to the root of the hierarchy.
-* ![WireMesh](https://github.com/dchege711/Augmented_Reality/blob/master/Unity_Tutorials/Screenshots/WireMesh.jpg)
+* ![WireMesh](https://github.com/dchege711/Augmented_Reality/blob/master/Images/WireMesh.jpg)
 * To add select and place capabilities, [TapToPlaceParent.cs](Origami/Assets/Scripts/TapToPlaceParent.cs) was attached to the Stage object.
 
 ### Chapter 7 - Holographic Fun
