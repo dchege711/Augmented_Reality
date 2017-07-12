@@ -1,6 +1,7 @@
 import psutil	# install using "pip install psutil"
 import time
 from collections import namedtuple
+import sys
 
 holoLensIPv4 = '10.8.113.245'	# The IPv4 address used by Unity to connect to the HoloLens
 
@@ -17,7 +18,7 @@ def getProcessID():
 	# If the application isn't running, return -1
 	return -1
 
-def myWiFiStats():
+def wiFiStats():
 	'''
 	Returns a namedtuple object with the fields:
 	('bytesSent', 'packetsSent', 'bytesReceived', 'packetsReceived')
@@ -28,8 +29,18 @@ def myWiFiStats():
 	bytesReceived = myNetworkStats["Wi-Fi"].bytes_recv
 	packetsReceived = myNetworkStats["Wi-Fi"].packets_recv
 
-	wiFiStats = namedtuple('wiFiStats', ['bytesSent', 'packetsSent', 'bytesReceived', 'packetsReceived'])
-	return wiFiStats(bytesSent, packetsSent, bytesReceived, packetsReceived)
+	myWiFiStats = namedtuple('wiFiStats', ['bytesSent', 'packetsSent', 'bytesReceived', 'packetsReceived'])
+	return myWiFiStats(bytesSent, packetsSent, bytesReceived, packetsReceived)
+
+def netWiFiStats(initialStats, currentStats):
+	# myWiFiStats returns a tuple
+	megaBytesSent = (currentStats.bytesSent - initialStats.bytesSent)/(1024 * 1024)
+	megaBytesReceived = (currentStats.bytesReceived - initialStats.bytesReceived)/(1024 * 1024)
+	totalPacketsSent = (currentStats.packetsSent - initialStats.packetsSent)
+	totalPacketsReceived = (currentStats.packetsReceived - initialStats.packetsReceived)
+
+	myNetWiFiStats = namedtuple('wiFiStats', ['bytesSent', 'packetsSent', 'bytesReceived', 'packetsReceived'])
+	return myNetWiFiStats(megaBytesSent, totalPacketsSent, megaBytesReceived, totalPacketsReceived)
 
 def printNetworkStats(megabytesSent, packetsSent, megabytesReceived, packetsReceived):
 	print("_________\n")
@@ -52,22 +63,60 @@ def myProgramStats(programName):
 	for connection in p.connections(kind = 'inet'):
 		print(connection)
 
-def main(interval):
-	print("Started ...")
-	startTime = time.time()
-	initialStats = myWiFiStats()
+def exportAsTextFile(dataPoints):
+	outputFile = open('HoloLensOrigami.txt', 'w')
+
+	headerInfo = dataPoints[0]._fields
+	numOfItems = len(headerInfo)
+	i = 0
+	for header in headerInfo:
+		if i < numOfItems - 1:
+			outputFile.write(header + "\t")
+		else:
+			outputFile.write(header + "\n")
+
+	for myNamedTuple in dataPoints:
+		i = 0
+		for data in myNamedTuple:
+			if i < numOfItems - 1:
+				outputFile.write(str(data) + "\t")
+			else:
+				outputFile.write(str(data) + "\n")
+			i += 1
+
+def main(numberOfDataPoints, interval):
+	dataPoints = []
+	# Set a reference point
+	initialStats = wiFiStats()
+
+	# Get 2 reference points to check for background noise
 	time.sleep(interval)
-	print("Finito...")
-	endStats = myWiFiStats()
-	endTime = time.time()
+	dataPoints.append(netWiFiStats(initialStats, wiFiStats()))
+	time.sleep(interval)
+	dataPoints.append(netWiFiStats(initialStats, wiFiStats()))
+	time.sleep(interval)
+	dataPointsSoFar = 2
+	print("\nNow connect to the HoloLens!\n")
 
-	# myWiFiStats returns a tuple
-	megaBytesSent = (endStats.bytesSent - initialStats.bytesSent)/(1024 * 1024)
-	megaBytesReceived = (endStats.bytesReceived - initialStats.bytesReceived)/(1024 * 1024)
-	totalPacketsSent = (endStats.packetsSent - initialStats.packetsReceived)
-	totalPacketsReceived = (endStats.packetsReceived - initialStats.packetsReceived)
+	while (dataPointsSoFar < numberOfDataPoints - 2):
+		dataPoints.append(netWiFiStats(initialStats, wiFiStats()))
+		time.sleep(interval)
+		dataPointsSoFar += 1
+		# print(netWiFiStats(initialStats, wiFiStats()))
+		print(dataPointsSoFar)
 
-	printNetworkStats(megaBytesSent, totalPacketsSent, megaBytesReceived, totalPacketsReceived)
+	# Get 3 reference points at the end
+	print("\nDisconnect the HoloLens\n")
+	dataPoints.append(netWiFiStats(initialStats, wiFiStats()))
+	time.sleep(interval)
+	dataPoints.append(netWiFiStats(initialStats, wiFiStats()))
+	time.sleep(interval)
+	dataPoints.append(netWiFiStats(initialStats, wiFiStats()))
+
+	exportAsTextFile(dataPoints)
+	print("\nCoolio! We're done.")
 
 if __name__ == "__main__":
-	main(60)
+	intervalInSeconds = 3
+	numberOfReadings = 50
+	main(numberOfReadings, intervalInSeconds)
