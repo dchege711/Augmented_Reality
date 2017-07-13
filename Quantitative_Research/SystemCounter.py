@@ -84,39 +84,59 @@ def exportAsTextFile(dataPoints):
 				outputFile.write(str(data) + "\n")
 			i += 1
 
-def main(numberOfDataPoints, interval):
+def getNDataPoints(numberOfMeasurements):
+	# From timeTheOperation(), the average time per iteration is 0.018 sec (N was 10,000)
+	# We can therefore set an interval of ~ 0.982 sec to get data per second
+	# We confirmed this delay empirically
+	intervalInSeconds = 0.982
+	i = 0
 	dataPoints = []
-	# Set a reference point
-	initialStats = wiFiStats()
+	previousStats = wiFiStats()
+	while (i < numberOfMeasurements):
+		time.sleep(intervalInSeconds)
+		currentStats = wiFiStats()
+		dataPoints.append(netWiFiStats(previousStats, currentStats))
+		previousStats = currentStats
+		print(i)
+		i += 1
+	return dataPoints
 
-	# Get 2 reference points to check for background noise
-	time.sleep(interval)
-	dataPoints.append(netWiFiStats(initialStats, wiFiStats()))
-	time.sleep(interval)
-	dataPoints.append(netWiFiStats(initialStats, wiFiStats()))
-	time.sleep(interval)
-	dataPointsSoFar = 2
+def main(numberOfDataPoints):
+	startTime = time.time()
+	# Get 10 reference points to check for background noise
+	first10 = getNDataPoints(10)
 	print("\nNow connect to the HoloLens!\n")
-
-	while (dataPointsSoFar < numberOfDataPoints - 2):
-		dataPoints.append(netWiFiStats(initialStats, wiFiStats()))
-		time.sleep(interval)
-		dataPointsSoFar += 1
-		# print(netWiFiStats(initialStats, wiFiStats()))
-		print(dataPointsSoFar)
-
-	# Get 3 reference points at the end
-	print("\nDisconnect the HoloLens\n")
-	dataPoints.append(netWiFiStats(initialStats, wiFiStats()))
-	time.sleep(interval)
-	dataPoints.append(netWiFiStats(initialStats, wiFiStats()))
-	time.sleep(interval)
-	dataPoints.append(netWiFiStats(initialStats, wiFiStats()))
-
+	# Get many measurements while HoloLens is connected
+	middleBunch = getNDataPoints(numberOfDataPoints - 30)
+	# Get 20 reference points at the end of the experiment
+	print("\nDisconnect the HoloLens!\n")
+	last20 = getNDataPoints(20)
+	endTime = time.time()
+	# Export the results to a text file
+	dataPoints = first10 + middleBunch + last20
 	exportAsTextFile(dataPoints)
+	print("\nApproximately", str((endTime - startTime)/numberOfDataPoints), "sec per iteration.")
 	print("\nCoolio! We're done.")
 
+def timeTheOperation():
+	# Set a reference point
+	numberOfTrials = 10
+	i = 0
+	previousStats = wiFiStats()
+	dataPoints = []
+	startTime = time.time()
+	while (i < numberOfTrials):
+		currentStats = wiFiStats()
+		dataPoints.append(netWiFiStats(previousStats, currentStats))
+		time.sleep(0.982)
+		previousStats = currentStats
+		print(i)
+		i += 1
+	stopTime = time.time()
+	averageTime = (stopTime - startTime) / numberOfTrials
+	print(str(averageTime), "seconds per call")
+
 if __name__ == "__main__":
-	intervalInSeconds = 3
-	numberOfReadings = 50
-	main(numberOfReadings, intervalInSeconds)
+	numberOfReadings = 200
+	main(numberOfReadings)	# Each takes ~1 sec (See getNDataPoints())
+	# timeTheOperation()
