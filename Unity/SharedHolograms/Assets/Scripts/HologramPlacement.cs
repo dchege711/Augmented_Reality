@@ -1,80 +1,30 @@
-﻿using Academy.HoloToolkit.Sharing;
-using Academy.HoloToolkit.Unity;
+﻿using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.Windows.Speech;
+using Academy.HoloToolkit.Unity;
+using Academy.HoloToolkit.Sharing;
 
 public class HologramPlacement : Singleton<HologramPlacement>
 {
     /// <summary>
-    /// Tracks if we have been sent a transform for the model.
-    /// The model is rendered relative to the actual anchor.
+    /// Tracks if we have been sent a transform for the anchor model.
+    /// The anchor model is rendered relative to the actual anchor.
     /// </summary>
     public bool GotTransform { get; private set; }
 
-    /// <summary>
-    /// When the experience starts, we disable all of the rendering of the model.
-    /// </summary>
-    List<MeshRenderer> disabledRenderers = new List<MeshRenderer>();
-
-    /// <summary>
-    /// We use a voice command to enable moving the target.
-    /// </summary>
-    KeywordRecognizer keywordRecognizer;
+    private bool animationPlayed = false;
 
     void Start()
     {
-        // When we first start, we need to disable the model to avoid it obstructing the user picking a hat.
-        DisableModel();
-
-        // We care about getting updates for the model transform.
+        // We care about getting updates for the anchor transform.
         CustomMessages.Instance.MessageHandlers[CustomMessages.TestMessageID.StageTransform] = this.OnStageTransfrom;
 
-        // And when a new user joins we will send the model transform we have.
+        // And when a new user join we will send the anchor transform we have.
         SharingSessionTracker.Instance.SessionJoined += Instance_SessionJoined;
-
-        // And if the users want to reset the stage transform.
-        CustomMessages.Instance.MessageHandlers[CustomMessages.TestMessageID.ResetStage] = this.OnResetStage;
-
-        // Setup a keyword recognizer to enable resetting the target location.
-        List<string> keywords = new List<string>();
-        keywords.Add("Reset Target");
-        keywordRecognizer = new KeywordRecognizer(keywords.ToArray());
-        keywordRecognizer.OnPhraseRecognized += KeywordRecognizer_OnPhraseRecognized;
-        keywordRecognizer.Start();
     }
 
     /// <summary>
-    /// When the keyword recognizer hears a command this will be called.
-    /// In this case we only have one keyword, which will re-enable moving the
-    /// target.
-    /// </summary>
-    /// <param name="args">information to help route the voice command.</param>
-    private void KeywordRecognizer_OnPhraseRecognized(PhraseRecognizedEventArgs args)
-    {
-        ResetStage();
-    }
-
-    /// <summary>
-    /// Resets the stage transform, so users can place the target again.
-    /// </summary>
-    public void ResetStage()
-    {
-        GotTransform = false;
-
-        // AppStateManager needs to know about this so that
-        // the right objects get input routed to them.
-        AppStateManager.Instance.ResetStage();
-
-        // Other devices in the experience need to know about this as well.
-        CustomMessages.Instance.SendResetStage();
-
-        // And we need to reset the object to its start animation state.
-        GetComponent<EnergyHubBase>().ResetAnimation();
-    }
-
-    /// <summary>
-    /// When a new user joins we want to send them the relative transform for the model if we have it.
+    /// When a new user joins we want to send them the relative transform for the anchor if we have it.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -86,65 +36,20 @@ public class HologramPlacement : Singleton<HologramPlacement>
         }
     }
 
-    /// <summary>
-    /// Turns off all renderers for the model.
-    /// </summary>
-    void DisableModel()
-    {
-        foreach (MeshRenderer renderer in gameObject.GetComponentsInChildren<MeshRenderer>())
-        {
-            if (renderer.enabled)
-            {
-                renderer.enabled = false;
-                disabledRenderers.Add(renderer);
-            }
-        }
-
-        foreach (MeshCollider collider in gameObject.GetComponentsInChildren<MeshCollider>())
-        {
-            collider.enabled = false;
-        }
-    }
-
-    /// <summary>
-    /// Turns on all renderers that were disabled.
-    /// </summary>
-    void EnableModel()
-    {
-        foreach (MeshRenderer renderer in disabledRenderers)
-        {
-            renderer.enabled = true;
-        }
-
-        foreach (MeshCollider collider in gameObject.GetComponentsInChildren<MeshCollider>())
-        {
-            collider.enabled = true;
-        }
-
-        disabledRenderers.Clear();
-    }
-
     void Update()
     {
-        // Wait till users pick an avatar to enable renderers.
-        if (disabledRenderers.Count > 0)
+        if (GotTransform)
         {
-            if (!PlayerAvatarStore.Instance.PickerActive &&
-            ImportExportAnchorManager.Instance.AnchorEstablished)
+            if (ImportExportAnchorManager.Instance.AnchorEstablished &&
+                animationPlayed == false)
             {
-                // After which we want to start rendering.
-                EnableModel();
-
-                // And if we've already been sent the relative transform, we will use it.
-                if (GotTransform)
-                {
-                    // This triggers the animation sequence for the model and
-                    // puts the cool materials on the model.
-                    GetComponent<EnergyHubBase>().SendMessage("OnSelect");
-                }
+                // This triggers the animation sequence for the anchor model and 
+                // puts the cool materials on the model.
+                GetComponent<EnergyHubBase>().SendMessage("OnSelect");
+                animationPlayed = true;
             }
         }
-        else if (GotTransform == false)
+        else
         {
             transform.position = Vector3.Lerp(transform.position, ProposeTransformPosition(), 0.2f);
         }
@@ -152,49 +57,9 @@ public class HologramPlacement : Singleton<HologramPlacement>
 
     Vector3 ProposeTransformPosition()
     {
-        Vector3 retval;
-        // We need to know how many users are in the experience with good transforms.
-        Vector3 cumulatedPosition = Camera.main.transform.position;
-        int playerCount = 1;
-        foreach (RemotePlayerManager.RemoteHeadInfo remoteHead in RemotePlayerManager.Instance.remoteHeadInfos)
-        {
-            if (remoteHead.Anchored && remoteHead.Active)
-            {
-                playerCount++;
-                cumulatedPosition += remoteHead.HeadObject.transform.position;
-            }
-        }
+        // Put the anchor 2m in front of the user.
+        Vector3 retval = Camera.main.transform.position + Camera.main.transform.forward * 2;
 
-        // If we have more than one player ...
-        if (playerCount > 1)
-        {
-            // Put the transform in between the players.
-            retval = cumulatedPosition / playerCount;
-            RaycastHit hitInfo;
-
-            // And try to put the transform on a surface below the midpoint of the players.
-            if (Physics.Raycast(retval, Vector3.down, out hitInfo, 5, SpatialMappingManager.Instance.LayerMask))
-            {
-                retval = hitInfo.point;
-            }
-        }
-        // If we are the only player, have the model act as the 'cursor' ...
-        else
-        {
-            // We prefer to put the model on a real world surface.
-            RaycastHit hitInfo;
-
-            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hitInfo, 30, SpatialMappingManager.Instance.LayerMask))
-            {
-                retval = hitInfo.point;
-            }
-            else
-            {
-                // But if we don't have a ray that intersects the real world, just put the model 2m in
-                // front of the user.
-                retval = Camera.main.transform.position + Camera.main.transform.forward * 2;
-            }
-        }
         return retval;
     }
 
@@ -219,9 +84,9 @@ public class HologramPlacement : Singleton<HologramPlacement>
         transform.localPosition = CustomMessages.Instance.ReadVector3(msg);
         transform.localRotation = CustomMessages.Instance.ReadQuaternion(msg);
 
-        // The first time, we'll want to send the message to the model to do its animation and
+        // The first time, we'll want to send the message to the anchor to do its animation and
         // swap its materials.
-        if (disabledRenderers.Count == 0 && GotTransform == false)
+        if (GotTransform == false)
         {
             GetComponent<EnergyHubBase>().SendMessage("OnSelect");
         }
@@ -229,14 +94,8 @@ public class HologramPlacement : Singleton<HologramPlacement>
         GotTransform = true;
     }
 
-    /// <summary>
-    /// When a remote system has a transform for us, we'll get it here.
-    /// </summary>
-    void OnResetStage(NetworkInMessage msg)
+    public void ResetStage()
     {
-        GotTransform = false;
-
-        GetComponent<EnergyHubBase>().ResetAnimation();
-        AppStateManager.Instance.ResetStage();
+        // We'll use this later.
     }
 }
