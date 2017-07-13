@@ -64,7 +64,7 @@ def myProgramStats(programName):
 		print(connection)
 
 def exportAsTextFile(dataPoints):
-	outputFile = open('HoloLensOrigami.txt', 'w')
+	outputFile = open('StationaryCube.txt', 'w')
 
 	headerInfo = dataPoints[0]._fields
 	numOfItems = len(headerInfo)
@@ -88,7 +88,7 @@ def getNDataPoints(numberOfMeasurements):
 	# From timeTheOperation(), the average time per iteration is 0.018 sec (N was 10,000)
 	# We can therefore set an interval of ~ 0.982 sec to get data per second
 	# We confirmed this delay empirically
-	intervalInSeconds = 0.982
+	intervalInSeconds = 0.995
 	i = 0
 	dataPoints = []
 	previousStats = wiFiStats()
@@ -128,7 +128,7 @@ def timeTheOperation():
 	while (i < numberOfTrials):
 		currentStats = wiFiStats()
 		dataPoints.append(netWiFiStats(previousStats, currentStats))
-		time.sleep(0.982)
+		time.sleep(0.995)
 		previousStats = currentStats
 		print(i)
 		i += 1
