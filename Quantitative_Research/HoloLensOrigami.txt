@@ -1,4 +1,4 @@
-bytesSent	packetsSent	bytesReceived	packetsReceived	0.0	0	0.0	0
+megaBytesSent	packetsSent	megaBytesReceived	packetsReceived	0.0	0	0.0	0
 0.0	0	0.0	0
 0.0	0	0.0	0
 0.0	0	0.0	0
