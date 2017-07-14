@@ -77,7 +77,7 @@ def exportAsTextFile(dataPoints):
 	'''
 	Exports the data as a tab delimited text file, with header information
 	'''
-	outputFile = open('StationaryCube.txt', 'w')
+	outputFile = open('demo.txt', 'w')
 
 	headerInfo = dataPoints[0]._fields
 	numOfItems = len(headerInfo)
