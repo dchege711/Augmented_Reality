@@ -1,9 +1,10 @@
-import psutil	# install using "pip install psutil"
+import psutil
 import time
 from collections import namedtuple
 import sys
 
-holoLensIPv4 = '10.8.113.245'	# The IPv4 address used by Unity to connect to the HoloLens
+# The IPv4 address used by Unity to connect to the HoloLens
+holoLensIPv4 = '10.8.113.245'
 
 def getProcessID():
 	'''
@@ -33,20 +34,29 @@ def wiFiStats():
 	return myWiFiStats(bytesSent, packetsSent, bytesReceived, packetsReceived)
 
 def netWiFiStats(initialStats, currentStats):
-	# myWiFiStats returns a tuple
+	'''
+	Given two WiFi network stats from wiFiStats(), this method returns the
+	difference between each of the fields.
+	Returns a namedtuple object with the fields:
+		megaBytesSent, packetsSent, megaBytesReceived, packetsReceived
+	'''
+	# initialStats and currentStats are namedtuples from wiFiStats()
 	megaBytesSent = (currentStats.bytesSent - initialStats.bytesSent)/(1024 * 1024)
 	megaBytesReceived = (currentStats.bytesReceived - initialStats.bytesReceived)/(1024 * 1024)
 	totalPacketsSent = (currentStats.packetsSent - initialStats.packetsSent)
 	totalPacketsReceived = (currentStats.packetsReceived - initialStats.packetsReceived)
 
-	myNetWiFiStats = namedtuple('wiFiStats', ['bytesSent', 'packetsSent', 'bytesReceived', 'packetsReceived'])
+	myNetWiFiStats = namedtuple('netWiFiStats', ['megaBytesSent', 'packetsSent', 'megaBytesReceived', 'packetsReceived'])
 	return myNetWiFiStats(megaBytesSent, totalPacketsSent, megaBytesReceived, totalPacketsReceived)
 
-def printNetworkStats(megabytesSent, packetsSent, megabytesReceived, packetsReceived):
+def printNetworkStats(megaBytesSent, packetsSent, megaBytesReceived, packetsReceived):
+	'''
+	Prints the network statistics to the console.
+	'''
 	print("_________\n")
 	print("Wi-Fi Stats...")
-	print("Sent\t\t: %6.2f MB," %megabytesSent, packetsSent, "packets")
-	print("Received\t: %6.2f MB," %megabytesReceived, packetsReceived, "packets")
+	print("Sent\t\t: %6.2f MB," %megaBytesSent, packetsSent, "packets")
+	print("Received\t: %6.2f MB," %megaBytesReceived, packetsReceived, "packets")
 	print("_________")
 
 def myProgramStats(programName):
@@ -64,6 +74,9 @@ def myProgramStats(programName):
 		print(connection)
 
 def exportAsTextFile(dataPoints):
+	'''
+	Exports the data as a tab delimited text file, with header information
+	'''
 	outputFile = open('StationaryCube.txt', 'w')
 
 	headerInfo = dataPoints[0]._fields
@@ -85,20 +98,28 @@ def exportAsTextFile(dataPoints):
 			i += 1
 
 def getNDataPoints(numberOfMeasurements):
-	# From timeTheOperation(), the average time per iteration is 0.018 sec (N was 10,000)
-	# We can therefore set an interval of ~ 0.982 sec to get data per second
-	# We confirmed this delay empirically
-	intervalInSeconds = 0.995
-	i = 0
+	'''
+	Returns a list of N measurements of data transfer in MB and packets per second.
+	'''
 	dataPoints = []
+
+	# We confirmed these delays empirically using timeTheOperation()
+	intervalOrigami = 0.982
+	intervalStaticCube = 0.995
+
+	# Set interval between wi-fi stats measurements
+	intervalInSeconds = intervalStaticCube
+
+	# Take the required number of measurements
 	previousStats = wiFiStats()
-	while (i < numberOfMeasurements):
+	for i in range(numberOfMeasurements):
 		time.sleep(intervalInSeconds)
 		currentStats = wiFiStats()
 		dataPoints.append(netWiFiStats(previousStats, currentStats))
 		previousStats = currentStats
 		print(i)
-		i += 1
+
+	# Return the results
 	return dataPoints
 
 def main(numberOfDataPoints):
@@ -119,19 +140,23 @@ def main(numberOfDataPoints):
 	print("\nCoolio! We're done.")
 
 def timeTheOperation():
+	'''
+	Used to determine the duration of fetching WiFi stats when running another
+	concurrent program.
+	'''
 	# Set a reference point
-	numberOfTrials = 10
+	numberOfTrials = 1000
 	i = 0
 	previousStats = wiFiStats()
 	dataPoints = []
 	startTime = time.time()
-	while (i < numberOfTrials):
+	for i in range(numberOfTrials):
 		currentStats = wiFiStats()
 		dataPoints.append(netWiFiStats(previousStats, currentStats))
-		time.sleep(0.995)
+		# time.sleep(0.995)
 		previousStats = currentStats
 		print(i)
-		i += 1
+
 	stopTime = time.time()
 	averageTime = (stopTime - startTime) / numberOfTrials
 	print(str(averageTime), "seconds per call")
