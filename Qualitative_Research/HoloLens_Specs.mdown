@@ -1,42 +1,44 @@
 ![HoloLens_Teardown](https://github.com/dchege711/Augmented_Reality/blob/master/Images/Inside_The_HoloLens.png)
 * *(Left to Right) Holographic Processing Unit, Holographic HD Lenses and Sensors. Photo Credits: [Microsoft](https://www.microsoft.com/en-us/hololens/hardware)*
 
-# HoloLens Specs
-* The HoloLens, unlike Google Glass, has significant processing power by itself.
-* Microsoft is quite dodgy with the specs, so I used this [guy's report](https://buildhololens.com/2016/05/04/detailed-hololens-hardware-specs/), but complemented using [Microsoft's](https://www.microsoft.com/en-us/hololens/hardware) and the [Verge's](https://www.theverge.com/2016/4/6/11376442/microsoft-hololens-holograms-parts-teardown-photos-hands-on) reports.
-* Here's a summary of the specifications that I thought may be relevant to Edge Lab:
-
 ### System
-* 2 GB Installed RAM
-* 54.09 GB of Internal Storage Capacity
-### CPU
-* Intel(R) Atom(TM) x5-Z8100P CPU @ 1.04 Ghz
-* 32-bit x86 Instruction Set
-* 4 Logical Processors
-* No fans or heat sinks ~~(at least not that we can see/hear)~~. Uses passive cooling.
+* 2 GB RAM (1 GB for 1.04 Ghz SoC CPU, 1 GB for GPU)
+* 64 GB Flash
+* Windows 10 (with Cortana)
+* x86 Architecture
+* No fans or heat sinks. Uses passive cooling (vents).
 ### Holographic Processing Unit (HPU)
 * 1 GB of RAM
-* This one's custom made for the HoloLens :open_mouth:
-* Proceeses all the data that comes from the sensors
+* This one's custom made for the HoloLens :open_mouth: Algorithms accelerated 200x.
+* Sensor aggregator with environment and gesture processing.
+* Gives a really compact output to the SoC. 
+* Consumes less power than SoC
+* [Detailed Webpage for the HPU-inclined](http://www.tomshardware.com/news/microsoft-hololens-hpu-architecure-28nm,32586.html)
 ### Display
 * 114 MB of dedicated video memory
 * 980 MB of shared system memory
 ### Batteries
-* 16,500 mWh, at the back distributed along each arm. 2-3 hours of continuous use.
-### Operating System
-* Windows 10
-* 900 MB of App Memory Usage Limit
-### Camera
+* 16,500 mWh, at the back distributed along each arm. 
+* 2-3 hours of continuous use. 2 weeks of standby time.
+### Optics
 * 2.4 MP (2048 x 1152) Resolution (Google Glass had 5 MP, HTC Vive has 2160 x 1200)
-* 1.1 MP (1408 x  792) Video Resolution (Google Glass had 720p)
-* 30 fps Video Speed
-* 50 Hz Power Line Frequency
-* 2 Special Cameras on each side, working with a Kinect-like depth sensing camera at the front. 
+* 1.1 MP (1408 x  792) Video Resolution (Google Glass had 720p). 30 fps Video Speed
+* Layered Lenses that split projected images, combine, diffract and layer to produce holograms in real space. 
+* Ambient Light Sensor
+* 4 environment-understanding cameras, 2 on each side.
+* Kinect-like depth sensing camera at the front for hand tracking and surface reconstruction.
+### Other Sensors
+* Inertial Measurement Unit (Accelerometer, Gryoscope and Magnetometer), located at the top of the holographic lenses.
 ### Storage Device
 * 64 GB Toshiba 064G32 (Google Glass had 12 GB)
 ### Connectivity
 * Wi-Fi & Bluetooth Enabled (So did Google Glass)
-### Spatial Sound
+### Sound
 * The HoloLens's speakers utilize an auditory model that gives the illusion of [spatial sound](https://www.youtube.com/watch?v=8IXm6SuUigI)
-
-
+* 4 microphones for speech commands.
+* 3.5 mm audio jack. (Side Note: I'm gonna miss this!) 
+----
+## Sources
+* [Microsoft](https://www.microsoft.com/en-us/hololens/hardware)
+* [The Verge](https://www.theverge.com/2016/4/6/11376442/microsoft-hololens-holograms-parts-teardown-photos-hands-on)
+* [Build HoloLens](https://buildhololens.com/2016/05/04/detailed-hololens-hardware-specs/)
