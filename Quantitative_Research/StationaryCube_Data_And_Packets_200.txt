@@ -1,4 +1,5 @@
-bytesSent	packetsSent	bytesReceived	packetsReceived	0.0	0	0.0	0
+bytesSent	packetsSent	bytesReceived	packetsReceived	
+0.0	0	0.0	0
 0.0	0	0.0	0
 0.0	0	0.0	0
 0.0019321441650390625	10	0.004599571228027344	10
