@@ -1,10 +1,16 @@
+#_______________________________________________________________________________
+
 import psutil
 import time
 from collections import namedtuple
 import sys
 
+#_______________________________________________________________________________
+
 # The IPv4 address used by Unity to connect to the HoloLens
 holoLensIPv4 = '10.8.113.245'
+
+#_______________________________________________________________________________
 
 def getProcessID():
 	'''
@@ -19,6 +25,8 @@ def getProcessID():
 	# If the application isn't running, return -1
 	return -1
 
+#_______________________________________________________________________________
+
 def wiFiStats():
 	'''
 	Returns a namedtuple object with the fields:
@@ -32,6 +40,8 @@ def wiFiStats():
 
 	myWiFiStats = namedtuple('wiFiStats', ['bytesSent', 'packetsSent', 'bytesReceived', 'packetsReceived'])
 	return myWiFiStats(bytesSent, packetsSent, bytesReceived, packetsReceived)
+
+#_______________________________________________________________________________
 
 def netWiFiStats(initialStats, currentStats):
 	'''
@@ -49,6 +59,8 @@ def netWiFiStats(initialStats, currentStats):
 	myNetWiFiStats = namedtuple('netWiFiStats', ['megaBytesSent', 'packetsSent', 'megaBytesReceived', 'packetsReceived'])
 	return myNetWiFiStats(megaBytesSent, totalPacketsSent, megaBytesReceived, totalPacketsReceived)
 
+#_______________________________________________________________________________
+
 def printNetworkStats(megaBytesSent, packetsSent, megaBytesReceived, packetsReceived):
 	'''
 	Prints the network statistics to the console.
@@ -58,6 +70,8 @@ def printNetworkStats(megaBytesSent, packetsSent, megaBytesReceived, packetsRece
 	print("Sent\t\t: %6.2f MB," %megaBytesSent, packetsSent, "packets")
 	print("Received\t: %6.2f MB," %megaBytesReceived, packetsReceived, "packets")
 	print("_________")
+
+#_______________________________________________________________________________
 
 def myProgramStats(programName):
 	'''
@@ -72,6 +86,8 @@ def myProgramStats(programName):
 	print("IPv4 and IPv6 Connections...")
 	for connection in p.connections(kind = 'inet'):
 		print(connection)
+
+#_______________________________________________________________________________
 
 def exportAsTextFile(dataPoints):
 	'''
@@ -96,6 +112,8 @@ def exportAsTextFile(dataPoints):
 			else:
 				outputFile.write(str(data) + "\n")
 			i += 1
+
+#_______________________________________________________________________________
 
 def getNDataPoints(numberOfMeasurements):
 	'''
@@ -122,6 +140,8 @@ def getNDataPoints(numberOfMeasurements):
 	# Return the results
 	return dataPoints
 
+#_______________________________________________________________________________
+
 def main(numberOfDataPoints):
 	startTime = time.time()
 	# Get 10 reference points to check for background noise
@@ -138,6 +158,8 @@ def main(numberOfDataPoints):
 	exportAsTextFile(dataPoints)
 	print("\nApproximately", str((endTime - startTime)/numberOfDataPoints), "sec per iteration.")
 	print("\nCoolio! We're done.")
+
+#_______________________________________________________________________________
 
 def timeTheOperation():
 	'''
@@ -161,7 +183,11 @@ def timeTheOperation():
 	averageTime = (stopTime - startTime) / numberOfTrials
 	print(str(averageTime), "seconds per call")
 
+#_______________________________________________________________________________
+
 if __name__ == "__main__":
 	numberOfReadings = 200
-	main(numberOfReadings)	# Each takes ~1 sec (See getNDataPoints())
+	# main(numberOfReadings)	# Each takes ~1 sec (See getNDataPoints())
 	# timeTheOperation()
+	print(getProcessID())
+#_______________________________________________________________________________
