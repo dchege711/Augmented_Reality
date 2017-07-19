@@ -12,5 +12,4 @@
 
 ![Compare_Data_Rates](https://github.com/dchege711/Augmented_Reality/blob/master/Images/Static_Cube_vs_Origami.png)
 
-* **Note: ~~*Currently, I haven't been able to discriminate between traffic sent by Unity to the HoloLens and back from traffic sent by the laptop in general. For now, I'm keeping other activities to a minimum and making repeated measurements. As you can see, the data tapers when the HoloLens-Laptop connection is off. Can anyone suggest how to measure process-specific data usage? Thanks in advance!*~~**
-    * Maria told me about Wireshark, which has enabled me to filter network data by specifying two endpoints.
+* **Note: ~~*Currently, I haven't been able to discriminate between traffic sent by Unity to the HoloLens and back from traffic sent by the laptop in general. For now, I'm keeping other activities to a minimum and making repeated measurements. As you can see, the data tapers when the HoloLens-Laptop connection is off. Can anyone suggest how to measure process-specific data usage? Thanks in advance!*~~** Maria suggested [Wireshark](https://www.wireshark.org/), which has enabled me to filter network data by specifying two IPv4 addresses.
