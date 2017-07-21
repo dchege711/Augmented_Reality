@@ -34,39 +34,6 @@ def logPerformanceStats(outputFile):
     The stats are:
         TimeStamp, CPULoad, DedicatedMemory, DedicatedMemoryUsed, SystemMemory,
         SystemMemoryUsed, EnginesUtilization
-
-    Sample result from the GET request...
-    {'Reason': ' {
-        "AvailablePages" : 230370,
-        "CommitLimit" : 764290,
-        "CommittedPages" : 382810,
-        "CpuLoad" : 42,
-        "IOOtherSpeed" : 13311247,
-        "IOReadSpeed" : 0,
-        "IOWriteSpeed" : 0,
-        "NonPagedPoolPages" : 47010,
-        "PageSize" : 4096,
-        "PagedPoolPages" : 19875,
-        "TotalInstalledInKb" : 2097152,
-        "TotalPages" : 502146,
-        "GPUData" : {
-            "AvailableAdapters" : [
-                {
-                    "DedicatedMemory" : 119537664,
-                    "DedicatedMemoryUsed" : 81920,
-                    "Description" : "HoloLens Graphics",
-                    "SystemMemory" : 1028395008,
-                    "SystemMemoryUsed" : 48226304,
-                    "EnginesUtilization" : [6.194690,0.000000,0.000000,0.000000,0.000000,0.000000,0.000000,0.000000,0.000000]
-                }
-            ]
-        },
-        "NetworkingData" : {
-            "NetworkInBytes" : 11000,
-            "NetworkOutBytes" : 24000
-        }
-        }
-    '}
     '''
     performanceURL = baseURL + "api/resourcemanager/systemperf"
     # Note: This is bad programming practice.
