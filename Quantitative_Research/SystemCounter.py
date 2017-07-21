@@ -4,11 +4,12 @@ import psutil
 import time
 from collections import namedtuple
 import sys
+import os
 
 #_______________________________________________________________________________
 
 # The IPv4 address used by Unity to connect to the HoloLens
-holoLensIPv4 = '10.8.113.245'
+holoLensIPv4 = os.environ['HL_CHEGE_IPV4']
 
 #_______________________________________________________________________________
 

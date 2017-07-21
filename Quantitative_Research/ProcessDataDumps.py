@@ -8,12 +8,13 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import pandas as pd
 import re
+import os
 
 #_______________________________________________________________________________
 
 # Useful IP Addresses
-laptopIPv4 = "10.8.227.69"
-holoLensIPv4 = "10.8.113.245"
+laptopIPv4 = os.environ['LAPTOP_IPV4']
+holoLensIPv4 = os.environ['HL_CHEGE_IPV4']
 
 #_______________________________________________________________________________
 
@@ -27,8 +28,8 @@ def getWDPStats(wdpDump):
     Sample Windows Device Portal Data
     Timestamp,Provider,ID
     ....
-    07/19/2017-16:02:12.9536544,Microsoft-Windows-Kernel-Network,11,Keyword:9223372036854776000,Level:4,Message:TCPv4: 124 bytes received from 10.8.113.245:443 to 10.8.227.69:55939. ,PID:4,ProviderName:Microsoft-Windows-Kernel-Network,TaskName:KERNEL_NETWORK_TASK_TCPIP,connid:0,daddr:10.8.227.69,dport:55939,saddr:10.8.113.245,seqnum:0,size:124,sport:443,WebbCompletePayload:message:tcpv4: 124 bytes received from 10.8.113.245:443 to 10.8.227.69:55939. , pid:4, connid:0, daddr:10.8.227.69, dport:55939, saddr:10.8.113.245, seqnum:0, size:124, sport:443,
-    07/19/2017-16:02:12.9595648,Microsoft-Windows-Kernel-Network,10,Keyword:9223372036854776000,Level:4,Message:TCPv4: 143 bytes transmitted from 10.8.113.245:443 to 10.8.227.69:55939. ,PID:4,ProviderName:Microsoft-Windows-Kernel-Network,TaskName:KERNEL_NETWORK_TASK_TCPIP,connid:0,daddr:10.8.227.69,dport:55939,endtime:931204,saddr:10.8.113.245,seqnum:0,size:143,sport:443,startime:931204,WebbCompletePayload:message:tcpv4: 143 bytes transmitted from 10.8.113.245:443 to 10.8.227.69:55939. , pid:4, connid:0, daddr:10.8.227.69, dport:55939, endtime:931204, saddr:10.8.113.245, seqnum:0, size:143, sport:443, startime:931204,
+    07/19/2017-16:02:12.9536544,Microsoft-Windows-Kernel-Network,11,Keyword:9223372036854776000,Level:4,Message:TCPv4: 124 bytes received from 10.X.XYZ.ABC:443 to 10.X.XYZ.XYZ:55939. ,PID:4,ProviderName:Microsoft-Windows-Kernel-Network,TaskName:KERNEL_NETWORK_TASK_TCPIP,connid:0,daddr:10.X.XYZ.XYZ,dport:55939,saddr:10.X.XYZ.ABC,seqnum:0,size:124,sport:443,WebbCompletePayload:message:tcpv4: 124 bytes received from 10.X.XYZ.ABC:443 to 10.X.XYZ.XYZ:55939. , pid:4, connid:0, daddr:10.X.XYZ.XYZ, dport:55939, saddr:10.X.XYZ.ABC, seqnum:0, size:124, sport:443,
+    07/19/2017-16:02:12.9595648,Microsoft-Windows-Kernel-Network,10,Keyword:9223372036854776000,Level:4,Message:TCPv4: 143 bytes transmitted from 10.X.XYZ.ABC:443 to 10.X.XYZ.XYZ:55939. ,PID:4,ProviderName:Microsoft-Windows-Kernel-Network,TaskName:KERNEL_NETWORK_TASK_TCPIP,connid:0,daddr:10.X.XYZ.XYZ,dport:55939,endtime:931204,saddr:10.X.XYZ.ABC,seqnum:0,size:143,sport:443,startime:931204,WebbCompletePayload:message:tcpv4: 143 bytes transmitted from 10.X.XYZ.ABC:443 to 10.X.XYZ.XYZ:55939. , pid:4, connid:0, daddr:10.X.XYZ.XYZ, dport:55939, endtime:931204, saddr:10.X.XYZ.ABC, seqnum:0, size:143, sport:443, startime:931204,
     ...
     '''
     # The time stamps are pretty dense (numerous points per second)
@@ -118,8 +119,8 @@ def getWiresharkStats(wiresharkDump):
     Sample Wireshark Data
     "No.","Time","Source","Destination","Protocol","Length","Info"
     ...
-    "17","2017-07-19 16:02:12.778552","10.8.227.69","10.8.113.245","TLSv1.2","178","Application Data"
-    "18","2017-07-19 16:02:12.801502","10.8.113.245","10.8.227.69","TCP","54","443  >  55939 [ACK] Seq=226 Ack=477 Win=258 Len=0"
+    "17","2017-07-19 16:02:12.778552","10.X.XYZ.XYZ","10.X.XYZ.ABC","TLSv1.2","178","Application Data"
+    "18","2017-07-19 16:02:12.801502","10.X.XYZ.ABC","10.X.XYZ.XYZ","TCP","54","443  >  55939 [ACK] Seq=226 Ack=477 Win=258 Len=0"
     ...
     '''
     # Initialize relevant variables
