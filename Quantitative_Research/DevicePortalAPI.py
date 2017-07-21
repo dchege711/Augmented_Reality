@@ -1,3 +1,9 @@
+'''
+Makes API requests to the Windows Developers Portal's RESTful API
+
+'''
+#_______________________________________________________________________________
+
 import requests
 import json
 import sys
@@ -5,15 +11,22 @@ import os
 from datetime import datetime as dt
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
-# I'm a baaaad boy :-D
+#_______________________________________________________________________________
+
+# No matter who you are, whatever you do, please, don't try this at home.
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
+#_______________________________________________________________________________
+
+# Initialize variables. (They'll be used as read-only)
 holoLensIPv4 = os.environ['HL_CHEGE_IPV4']
 baseURL = "https://" + holoLensIPv4 + "/"
 USERNAME = os.environ['WDP_USERNAME']
 PASSWORD = os.environ['WDP_PASSWORD_HL_CHEGE']
 dtFormat = "%Y-%m-%d %H:%M:%S.%f"
 fileNameDTFormat = "%m-%d-%H_%M"
+
+#_______________________________________________________________________________
 
 def logPerformanceStats(outputFile):
     '''
@@ -71,15 +84,27 @@ def logPerformanceStats(outputFile):
             str(gpuData['EnginesUtilization']) + "\n"
     )
 
+#_______________________________________________________________________________
 
 def writePerformanceStats():
+    '''
+    Creates a time-stamped data file and calls writePerformanceStats()
+    To stop logging, use the keyboard interrupt (Command + C)
+    '''
+
+    print("Writing performance stats...")
+
+    # Open the file that will be used as output
     currentDir = os.path.dirname(__file__)
     fileName = dt.now().strftime(fileNameDTFormat) + "_HL_Performance.txt"
-    print("Writing performance stats...")
     filePath = os.path.join(currentDir, 'Data_Dumps', fileName)
     outputFile = open(filePath, 'w')
+
+    # Include header information to make the output file easily understandable
     outputFile.write("TimeStamp\tCPULoad\tDedicatedMemory\tDedicatedMemoryUsed\t" +
                     "SystemMemory\tSystemMemoryUsed\tEnginesUtilization\n")
+
+    # Keep logging until user presses Command + C
     while (True):
         try:
             logPerformanceStats(outputFile)
@@ -87,5 +112,9 @@ def writePerformanceStats():
             print("Coolio! Exiting program...")
             sys.exit()
 
+#_______________________________________________________________________________
+
 if __name__ == '__main__':
     writePerformanceStats()
+
+#_______________________________________________________________________________
