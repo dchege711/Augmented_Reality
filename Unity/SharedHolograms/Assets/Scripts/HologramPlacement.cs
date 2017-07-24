@@ -11,8 +11,14 @@ public class HologramPlacement : Singleton<HologramPlacement>
 	/// <summary>
 	/// Tracks if we have been sent a transform for the model.
 	/// The model is rendered relative to the actual anchor.
+	/// (Introduced at the Sharing Step)
 	/// </summary>
 	public bool GotTransform { get; private set; }
+
+	/// <summary>
+	/// (Introduced at the Sharing Step) Deleted later.
+	/// private bool animationPlayed = false;
+	/// </summary>
 
 	/// <summary>
 	/// When the experience starts, we disable all of the rendering of the model.
