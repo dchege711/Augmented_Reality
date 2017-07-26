@@ -21,7 +21,7 @@ namespace Academy.HoloToolkit.Sharing
         public string ServerAddress = "localhost";
         public int ServerPort = 20602;
 
-        string filePath = @"C:\Users\dchege711\Documents\Augmented_Reality\Unity\SharingBasics\Data_Dumps\SharingManager.txt";
+        // string filePath = @"C:\Users\dchege711\Documents\Augmented_Reality\Unity\SharingBasics\Data_Dumps\SharingManager.txt";
 
 
         private SharingManager sharingMgr;
@@ -75,8 +75,8 @@ namespace Academy.HoloToolkit.Sharing
             }
 
             networkConnectionAdapter = new NetworkConnectionAdapter();
-            logMsgToTextFile(filePath, getDateTime());
-            logMsgToTextFile(filePath, sharingMgr.GetServerConnection().echoMessage());
+            // logMsgToTextFile(filePath, getDateTime());
+            // logMsgToTextFile(filePath, sharingMgr.GetServerConnection().echoMessage());
         }
 
         protected void OnDestroy()
@@ -133,7 +133,7 @@ namespace Academy.HoloToolkit.Sharing
                 // Update the XToolsManager to processes any network messages that have arrived
                 sharingMgr.Update();
                 // Log the incoming text to a text file.
-                logMsgToTextFile(filePath, getDateTime() + " " + sharingMgr.GetServerConnection().echoMessage());
+                // logMsgToTextFile(filePath, getDateTime() + " " + sharingMgr.GetServerConnection().echoMessage());
             }
         }
 
@@ -245,15 +245,15 @@ namespace Academy.HoloToolkit.Sharing
             }
         }
 
-        // Appends a given string to the specified text file.
-        void logMsgToTextFile(string filePath, string message)
-        {
-            using (System.IO.StreamWriter file =
-                new System.IO.StreamWriter(filePath, true))
-            {
-                file.WriteLine(message);
-            }
-        }
+        //// Appends a given string to the specified text file.
+        //void logMsgToTextFile(string filePath, string message)
+        //{
+        //    using (System.IO.StreamWriter file =
+        //        new System.IO.StreamWriter(filePath, true))
+        //    {
+        //        file.WriteLine(message);
+        //    }
+        //}
 
         // Helper method for getting time stamps as strings.
         // These time stamps will be attached to the output data files

@@ -3,7 +3,7 @@
 * I've already done the entire tutorial (see [Shared Holograms](https://github.com/dchege711/Augmented_Reality/tree/master/Unity/SharedHolograms)), but this time I want to focus more on how the sharing of data between 2 HoloLens is facilitated. I'll only do some of the steps in Microsoft's tutorial.
 * The end-goal is to gain enough understanding to set up a shared holographic experience using an edge-node and edge-device structure.
 
-#### Note:
+#### Note: 
 * *At the beginning, there's an error about importing NuGet packages. Ignore it, unless you try exporting the project from Unity to Visual Studio and it fails. For reference, I am using Unity 5.6.2f and Visual Studio 2017 Community.*
 
 ## Chapter 1 - Holo World
