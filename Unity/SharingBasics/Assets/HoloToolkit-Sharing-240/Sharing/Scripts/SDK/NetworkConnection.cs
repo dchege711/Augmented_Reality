@@ -144,6 +144,22 @@ public class NetworkConnection : global::System.IDisposable {
     return ret; 
   }
 
+  // I added this code to try to record messages that pass through
+  // This is easier than probing NetworkOutMessage or NetworkInMessage
+  // The sender of the information will overwrite this variable, while 
+  // a method on SharingStage.cs will record this message.
+  private string recentMessage = "";
+  public virtual void recordMessage(string message) {
+    recentMessage = message;
+  }
+
+  public virtual string echoMessage() {
+    if (recentMessage == "") {
+                return "None";
+    }
+    return recentMessage;
+  }
+
 }
 
 }

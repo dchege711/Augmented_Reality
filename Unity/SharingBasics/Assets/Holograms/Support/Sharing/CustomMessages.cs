@@ -1,6 +1,7 @@
 ﻿using Academy.HoloToolkit.Sharing;
 using Academy.HoloToolkit.Unity;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class CustomMessages : Singleton<CustomMessages>
@@ -51,20 +52,35 @@ public class CustomMessages : Singleton<CustomMessages>
     /// </summary>
     NetworkConnection serverConnection;
 
+	/// <summary>
+	/// Chege: Helper variables for logging data
+	/// </summary>
+	string filePathIncoming = @"C:\Users\dchege711\Documents\Augmented_Reality\Unity\SharingBasics\Data_Dumps\Incoming.txt";
+	string filePathOutgoing = @"C:\Users\dchege711\Documents\Augmented_Reality\Unity\SharingBasics\Data_Dumps\Outgoing.txt";
+
     void Start()
     {
         InitializeMessageHandlers();
+
+		// Open text files for logging the messages sent
+		// System.IO.File.WriteAllText(filePathIncoming, getDateTime());
+		// System.IO.File.WriteAllText(filePathOutgoing, getDateTime());
+
     }
 
 	// This is implemented once, at the beginning of the application
     void InitializeMessageHandlers()
     {
+		// Get a reference to the (one) instance of SharingStage
         SharingStage sharingStage = SharingStage.Instance;
         if (sharingStage != null)
         {
+			// If none exists, create a new server connection
             serverConnection = sharingStage.Manager.GetServerConnection();
+			// Also instantiate a new NetworkConnectionAdapter() instance
             connectionAdapter = new NetworkConnectionAdapter();
         }
+
 
         connectionAdapter.MessageReceivedCallback += OnMessageReceived;
 
@@ -103,6 +119,17 @@ public class CustomMessages : Singleton<CustomMessages>
 
             msg.Write(HasAnchor);
 
+			// Chege: Log this message to a text file so that we see what's being sent
+			// We'll be appending data to the text file instead of overwriting
+			logMsgToTextFile(filePathOutgoing, getDateTime());
+			logMsgToTextFile(filePathOutgoing, position.ToString());
+			logMsgToTextFile(filePathOutgoing, rotation.ToString());
+			logMsgToTextFile(filePathOutgoing, msg.ToString());
+
+            // Try setting a variable that will be accessed by SharingStage.cs
+            string messageAsString = getDateTime() + " " + position.ToString() + " " + rotation.ToString();
+            this.serverConnection.recordMessage(messageAsString);
+
             // Send the message as a broadcast, which will cause the server to forward it to all other users in the session.
             this.serverConnection.Broadcast(
                 msg,
@@ -121,6 +148,18 @@ public class CustomMessages : Singleton<CustomMessages>
             NetworkOutMessage msg = CreateMessage((byte)TestMessageID.StageTransform);
 
             AppendTransform(msg, position, rotation);
+
+			// Chege: Log this message to a text file so that we see what's being sent
+			// We'll be appending data to the text file instead of overwriting
+			logMsgToTextFile(filePathOutgoing, getDateTime());
+			logMsgToTextFile(filePathOutgoing, position.ToString());
+			logMsgToTextFile(filePathOutgoing, rotation.ToString());
+
+            // Try setting a variable that will be accessed by SharingStage.cs
+            string messageAsString = getDateTime() + " " + position.ToString() + " " + rotation.ToString();
+            this.serverConnection.recordMessage(messageAsString);
+
+            logMsgToTextFile(filePathOutgoing, msg.ToString());
 
             // Send the message as a broadcast, which will cause the server to forward it to all other users in the session.
             this.serverConnection.Broadcast(
@@ -148,6 +187,16 @@ public class CustomMessages : Singleton<CustomMessages>
     {
         byte messageType = msg.ReadByte();
         MessageCallback messageHandler = MessageHandlers[(TestMessageID)messageType];
+
+		// Chege: Log this message to a text file so that we see what's being received
+		// We'll be appending data to the text file instead of overwriting
+		logMsgToTextFile(filePathIncoming, getDateTime());
+		// Apparently, we're not supposed to mess with NetworkInMessage w/o parental guidance
+		// Let's see if we can get a string representation 
+		logMsgToTextFile(filePathIncoming, msg.ReadString().ToString());
+		// And also the size of the message
+		logMsgToTextFile(filePathIncoming, msg.ToString());
+
         if (messageHandler != null)
         {
             messageHandler(msg);
@@ -177,6 +226,17 @@ public class CustomMessages : Singleton<CustomMessages>
         msg.Write(rotation.w);
     }
 
+	// Added by Chege
+	void logMsgToTextFile(string filePath, string message) 
+	{
+		using (System.IO.StreamWriter file = 
+			new System.IO.StreamWriter(filePath, true))
+		{
+			file.WriteLine(message);
+		}
+	}
+		
+
     #endregion HelperFunctionsForWriting
 
     #region HelperFunctionsForReading
@@ -192,4 +252,15 @@ public class CustomMessages : Singleton<CustomMessages>
     }
 
     #endregion HelperFunctionsForReading
+
+	// Helper method for getting time stamps as strings.
+	// These time stamps will be attached to the output data files
+	public string getDateTime() {
+		return DateTime.Now.ToString() + " ";
+	}
+
+	// Helper method for converting bytes to strings
+	public string convertByteToString(byte myByte) {
+		return System.Text.Encoding.ASCII.GetString (new[] {myByte});
+	}
 }
