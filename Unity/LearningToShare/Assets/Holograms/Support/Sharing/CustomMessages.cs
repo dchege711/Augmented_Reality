@@ -95,6 +95,7 @@ public class CustomMessages : Singleton<CustomMessages>
         return msg;
     }
 
+    // This sends 2 bytes, a vector3 and a quaternion
     public void SendHeadTransform(Vector3 position, Quaternion rotation, byte HasAnchor)
     {
         // If we are connected to a session, broadcast our head info
@@ -116,6 +117,7 @@ public class CustomMessages : Singleton<CustomMessages>
         }
     }
 
+    // This broadcasts a byte, and two vector3's
     public void SendShootProjectile(Vector3 position, Vector3 direction)
     {
         // If we are connected to a session, broadcast our head info
@@ -136,6 +138,7 @@ public class CustomMessages : Singleton<CustomMessages>
         }
     }
 
+    // This broadcasts a byte and an int
     public void SendUserAvatar(int UserAvatarID)
     {
         // If we are connected to a session, broadcast our head info
@@ -155,6 +158,7 @@ public class CustomMessages : Singleton<CustomMessages>
         }
     }
 
+    // This broadcasts a byte and a long
     public void SendUserHit(long HitUserID)
     {
         // If we are connected to a session, broadcast our head info
@@ -174,6 +178,7 @@ public class CustomMessages : Singleton<CustomMessages>
         }
     }
 
+    // This broadcasts a byte, a Vector3 and a Quaternion
     public void SendStageTransform(Vector3 position, Quaternion rotation)
     {
         // If we are connected to a session, broadcast our head info
@@ -193,6 +198,7 @@ public class CustomMessages : Singleton<CustomMessages>
         }
     }
 
+    // This broadcasts a byte
     public void SendResetStage()
     {
         // If we are connected to a session, broadcast our head info
@@ -210,6 +216,7 @@ public class CustomMessages : Singleton<CustomMessages>
         }
     }
 
+    // This broadcasts a byte
     public void SendExplodeTarget()
     {
         // If we are connected to a session, broadcast that the target exploded.
