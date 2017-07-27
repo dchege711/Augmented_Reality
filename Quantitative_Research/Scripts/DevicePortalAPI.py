@@ -19,8 +19,10 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 #_______________________________________________________________________________
 
 # Initialize variables. (They'll be used as read-only)
-holoLensIPv4 = os.environ['HL_CHEGE_IPV4']
-baseURL = "https://" + holoLensIPv4 + "/"
+holoLensIPv4Chege = os.environ['HL_CHEGE_IPV4']
+holoLensIPv4Maria = os.environ['HL_MARIA_IPV4']
+baseURLChege = "https://" + holoLensIPv4Chege + "/"
+baseURLMaria = "https://" + holoLensIPv4Maria + "/"
 USERNAME = os.environ['WDP_USERNAME']
 PASSWORD = os.environ['WDP_PASSWORD_HL_CHEGE']
 dtFormat = "%Y-%m-%d %H:%M:%S.%f"
@@ -28,14 +30,17 @@ fileNameDTFormat = "%m-%d-%H_%M"
 
 #_______________________________________________________________________________
 
-def logPerformanceStats(outputFile):
+def logPerformanceStats(outputFile, whichHoloLens):
     '''
     Prints out performance stats (tab-delimited) to the specified text file.
     The stats are:
         TimeStamp, CPULoad, DedicatedMemory, DedicatedMemoryUsed, SystemMemory,
         SystemMemoryUsed, EnginesUtilization
     '''
-    performanceURL = baseURL + "api/resourcemanager/systemperf"
+    if whichHoloLens == 'Chege':
+        performanceURL = baseURLChege + "api/resourcemanager/systemperf"
+    else:
+        performanceURL = baseURLMaria + "api/resourcemanager/systemperf"
     # Note: This is bad programming practice.
     # We've suppressed the warnings and ignored verifications
     r = requests.get(performanceURL, verify = False, auth = (USERNAME, PASSWORD))
@@ -53,7 +58,7 @@ def logPerformanceStats(outputFile):
 
 #_______________________________________________________________________________
 
-def writePerformanceStats():
+def writePerformanceStats(whichHoloLens):
     '''
     Creates a time-stamped data file and calls writePerformanceStats()
     To stop logging, use the keyboard interrupt (Command + C)
@@ -63,7 +68,7 @@ def writePerformanceStats():
 
     # Open the file that will be used as output
     currentDir = os.path.dirname(__file__)
-    fileName = dt.now().strftime(fileNameDTFormat) + "_HL_Performance.txt"
+    fileName = whichHoloLens + "_" + dt.now().strftime(fileNameDTFormat) + "_HL_Performance.txt"
     filePath = os.path.join(currentDir, 'Data_Dumps', fileName)
     outputFile = open(filePath, 'w')
 
@@ -74,7 +79,7 @@ def writePerformanceStats():
     # Keep logging until user presses Command + C
     while (True):
         try:
-            logPerformanceStats(outputFile)
+            logPerformanceStats(outputFile, whichHoloLens)
         except KeyboardInterrupt:
             print("Coolio! Exiting program...")
             sys.exit()
@@ -82,6 +87,6 @@ def writePerformanceStats():
 #_______________________________________________________________________________
 
 if __name__ == '__main__':
-    writePerformanceStats()
+    writePerformanceStats(sys.argv[1])
 
 #_______________________________________________________________________________

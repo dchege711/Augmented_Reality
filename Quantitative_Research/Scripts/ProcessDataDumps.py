@@ -125,9 +125,9 @@ def getWiresharkStats(wiresharkDump):
     '''
     # Initialize relevant variables
     holoLensToLaptop_timeStamps = []
-    holoLensToLaptop_megapackets = []
+    holoLensToLaptop_packets = []
     laptopToHoloLens_timeStamps = []
-    laptopToHoloLens_megapackets = []
+    laptopToHoloLens_packets = []
 
     sent = 0
     received = 0
@@ -149,43 +149,136 @@ def getWiresharkStats(wiresharkDump):
             line = line.replace('"', '')    # Urgh, why did Wireshark do this?
             items = line.split(",")
             timeStamp = items[TIME].split('.')[0]
-            megaPackets = float(items[LENGTH]) / 1000000
+            packets = int(items[LENGTH])
 
             if items[SOURCE] == holoLensIPv4:
-                sent += megaPackets
+                sent += packets
                 if timeStamp == prevTimeStampSent:
-                    runningDataSumSent += megaPackets
+                    runningDataSumSent += packets
+                    # print(str(packets), end = " + ")
                 else:
                     holoLensToLaptop_timeStamps.append(prevTimeStampSent)
-                    holoLensToLaptop_megapackets.append(runningDataSumSent)
+                    holoLensToLaptop_packets.append(runningDataSumSent)
                     prevTimeStampSent = timeStamp
-                    runningDataSumSent = megaPackets
+                    runningDataSumSent = packets
+                    print(timeStamp, str(packets))
 
 
             elif items[DESTINATION] == holoLensIPv4:
 
-                received += megaPackets
+                received += packets
                 if timeStamp == prevTimeStampReceived:
-                    runningDataSumReceived += megaPackets
+                    runningDataSumReceived += packets
                 else:
                     laptopToHoloLens_timeStamps.append(prevTimeStampReceived)
-                    laptopToHoloLens_megapackets.append(runningDataSumReceived)
+                    laptopToHoloLens_packets.append(runningDataSumReceived)
                     prevTimeStampReceived = timeStamp
-                    runningDataSumReceived = megaPackets
+                    runningDataSumReceived = packets
 
     # Communicate status to terminal
-    print(  "Sent {0:.2f} megapackets".format(sent),
-            ", received {0:.2f} megapackets".format(received),
-            ", total = {0:.2f} megapackets".format((sent+received))
+    print(  "Sent {0:.2f} packets".format(sent),
+            ", received {0:.2f} packets".format(received),
+            ", total = {0:.2f} packets".format((sent+received))
     )
-    print("\nSent Array Length", str(len(holoLensToLaptop_timeStamps)), "/", str(len(holoLensToLaptop_megapackets)))
-    print("\nReceived Array Length", str(len(laptopToHoloLens_timeStamps)), "/", str(len(laptopToHoloLens_megapackets)))
+    print("\nSent Array Length", str(len(holoLensToLaptop_timeStamps)), "/", str(len(holoLensToLaptop_packets)))
+    print("\nReceived Array Length", str(len(laptopToHoloLens_timeStamps)), "/", str(len(laptopToHoloLens_packets)))
 
-    return (holoLensToLaptop_timeStamps, holoLensToLaptop_megapackets, laptopToHoloLens_timeStamps, laptopToHoloLens_megapackets)
+    return (holoLensToLaptop_timeStamps, holoLensToLaptop_packets, laptopToHoloLens_timeStamps, laptopToHoloLens_packets)
 
 #_______________________________________________________________________________
 
-def compareDataOnGraph(titleAndLabels, datasetOneTime, dataSetOneData, datasetTwoTime, datasetTwoData):
+def getHLPerformanceStats(hlConsoleDump):
+    '''
+    Sample Data
+    TimeStamp	CPULoad	DedicatedMemory	DedicatedMemoryUsed	SystemMemory	SystemMemoryUsed	EnginesUtilization
+    2017-07-27 11:16:25.544534	34	119537664	81920	1028395008	59297792	[48.228125, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    '''
+
+    with open(hlConsoleDump) as hlConsoleDump:
+        headers = hlConsoleDump.readline()
+
+        # Set up helper variables
+        timeStamps = []
+        cpuLoad = []
+        dedicatedMemoryUsed = []
+        systemMemoryUsed = []
+        engineOne = []
+        restOfEngines = [] # I think the other engines are never engaged...
+        prevTimeStamp = "11:16:23" # Should be the first timestamp in the file
+
+        cpuSum = 0
+        dedicatedMemSum = 0
+        systemMemSum = 0
+        engineOneSum = 0
+        restOfEnginesSum = 0
+        itemsInThatSecond = 0
+
+        # Too lazy to write this out, or pass thousands of parameters around
+        # def incrementSums(items):
+        #     global cpuSum
+        #     global dedicatedMemSum
+        #     global systemMemSum
+        #     global engineOneSum
+        #     global restOfEnginesSum
+        #     global itemsInThatSecond
+        #
+        #     itemsInThatSecond += 1
+        #     cpuSum += int(items[1])
+        #     dedicatedMemSum += int(items[3])
+        #     systemMemSum += int(items[5])
+        #     engineOneSum += float(items[5][0])
+        #     restOfEnginesSum += float(items[5][1])
+
+        for line in hlConsoleDump:
+            items = line.split('\t')
+            currentTimeStamp = items[0].split('.')[0].split()[1]
+
+            # Aggregate all the data points in a given second
+            if currentTimeStamp == prevTimeStamp:
+                # incrementSums(items)
+                itemsInThatSecond += 1
+                cpuSum += int(items[1])
+                dedicatedMemSum += int(items[3])
+                systemMemSum += int(items[5])
+                engineOneSum += float(items[5][0])
+                restOfEnginesSum += float(items[5][1])
+
+            else:
+                # Append the averages to the tuples
+                timeStamps.append(prevTimeStamp)
+                cpuLoad.append(cpuSum / itemsInThatSecond)
+                dedicatedMemoryUsed.append(dedicatedMemSum / itemsInThatSecond)
+                systemMemoryUsed.append(systemMemSum / itemsInThatSecond)
+                engineOne.append(engineOneSum / itemsInThatSecond)
+                restOfEngines.append(restOfEnginesSum / itemsInThatSecond)
+
+                # Reset the variables
+                cpuSum, dedicatedMemSum, systemMemSum, engineOneSum = (0, 0, 0, 0)
+                restOfEnginesSum, itemsInThatSecond = (0, 0)
+
+                prevTimeStamp = currentTimeStamp
+
+                # Restart the process
+                # incrementSums(items)
+                itemsInThatSecond += 1
+                cpuSum += int(items[1])
+                dedicatedMemSum += int(items[3])
+                systemMemSum += int(items[5])
+                engineOneSum += float(items[5][0])
+                restOfEnginesSum += float(items[5][1])
+
+    print(str(len(timeStamps)), "time stamps,", str(len(cpuLoad)), "CPU measurements.")
+    return timeStamps, cpuLoad, dedicatedMemoryUsed, systemMemoryUsed, engineOne, restOfEngines
+
+
+#_______________________________________________________________________________
+
+def compareDataOnGraph(title, plotData):
+    '''
+    Plots multiple graphs on the same figure
+    'title' is a string which will be set as the graph's title
+    plotdata is a list of tuples of the form (time(list), values(list), label(string))
+    '''
 
     # timeOne, valuesDataSetOne = np.loadtxt(dataSetOne, unpack = True,
     #                             converters = )
@@ -197,30 +290,35 @@ def compareDataOnGraph(titleAndLabels, datasetOneTime, dataSetOneData, datasetTw
     # ...
     # (2017-07-19 16:02:02.739335, 12)
 
-    # The simple case. Each separately
-    timeOne = pd.to_datetime(datasetOneTime)
-    timeTwo = pd.to_datetime(datasetTwoTime)
-
     plt.figure(1)
     plt.grid(True)
     plt.xlabel('Time')
-    plt.ylabel('Rate of Data Transfer (Megapackets))')
-    plt.title(titleAndLabels[0])
-    plt.plot_date(x = timeOne, y = dataSetOneData, fmt = 'r-', label = titleAndLabels[1])
-    plt.plot_date(x = timeTwo, y = datasetTwoData, fmt = 'b-', label = titleAndLabels[2])
+    # plt.ylabel('Rate of Data Transfer (packets))')
+    plt.title(title)
+    formatSrings = ['b-', 'r-', 'c-', 'm-', 'g-', 'b-']
+
+    index = 0
+    for dataset in plotData:
+        timeData = pd.to_datetime(dataset[0])
+        plt.plot_date(x = timeData, y = dataset[1],
+                      fmt = formatSrings[index % len(formatSrings)],
+                      label = dataset[2])
+        index += 1
+
     plt.legend(loc = 'best')
     plt.show()
 
 #_______________________________________________________________________________
 
 def main():
-    wdpStats = getWDPStats('Origami_Windows_Device_Portal.csv')
-    wiresharkStats = getWiresharkStats('Origami_Wireshark.csv')
-    titleAndLabels = [  'Data Transfer by the Origami App',
-                        'HoloLens to Laptop',
-                        'Laptop to HoloLens'
+    # wdpStats = getWDPStats('Origami_Windows_Device_Portal.csv')
+    # wiresharkStats = getWiresharkStats('Chege_Maria_Wireshark_07271121.csv')
+    hololensStats = getHLPerformanceStats('Chege_07-27-11_16_HL_Performance.txt')
+    plotData = [
+        (hololensStats[0], hololensStats[1], "CPU Load"),
+        (hololensStats[0], hololensStats[4], "Engine One")
     ]
-    compareDataOnGraph(titleAndLabels, wiresharkStats[0], wiresharkStats[1], wiresharkStats[2], wiresharkStats[3])
+    compareDataOnGraph("HoloLens Performance Stats", plotData)
 
 #_______________________________________________________________________________
 

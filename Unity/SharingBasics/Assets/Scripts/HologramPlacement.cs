@@ -3,6 +3,7 @@ using Academy.HoloToolkit.Unity;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Windows.Speech;
+using System;
 
 
 // Step 3: Sharing coordinates
@@ -16,6 +17,8 @@ public class HologramPlacement : Singleton<HologramPlacement>
 
 	// Added in step 3: Sharing coordinates
 	private bool animationPlayed = false;
+    private string prevDateTime;
+    private int noOfCoordinateShares = 0;
 
     void Start()
     {
@@ -29,6 +32,9 @@ public class HologramPlacement : Singleton<HologramPlacement>
 
 		// Step 3: And when a new user joins, we will send the anchor transform that we have.
 		SharingSessionTracker.Instance.SessionJoined += Instance_SessionJoined;
+
+        // Initialize the datetime variable so that we can send coordinates each second
+        prevDateTime = System.DateTime.Now.ToString();
     }
 
 	/// <summary>
@@ -47,6 +53,13 @@ public class HologramPlacement : Singleton<HologramPlacement>
 
     void Update()
     {
+        string currentTime = System.DateTime.Now.ToString();
+        // Send the coordinates every second
+        if (currentTime != prevDateTime) {
+            prevDateTime = currentTime;
+            OnSelect();
+        }
+
 		if (GotTransform) 
 		{
 			// Added in Step 3: Sharing coordinates
@@ -85,6 +98,10 @@ public class HologramPlacement : Singleton<HologramPlacement>
 
 		// And send this transform to our friends in the session
 		CustomMessages.Instance.SendStageTransform(transform.localPosition, transform.localRotation);
+
+        // Log this for our analysis
+        noOfCoordinateShares += 1;
+        Debug.Log(noOfCoordinateShares.ToString() + " " + prevDateTime + " Sent the localPosition and localRotation");
     }
 
 	/// <summary>
