@@ -16,9 +16,7 @@ public class HologramPlacement : Singleton<HologramPlacement>
     public bool GotTransform { get; private set; }
 
 	// Added in step 3: Sharing coordinates
-	private bool animationPlayed = false;
     private string prevDateTime;
-    private int noOfCoordinateShares = 0;
 
     void Start()
     {
@@ -54,21 +52,16 @@ public class HologramPlacement : Singleton<HologramPlacement>
     void Update()
     {
         string currentTime = System.DateTime.Now.ToString();
-        // Send the coordinates every second
+        // Send the data every second
         if (currentTime != prevDateTime) {
             prevDateTime = currentTime;
-            OnSelect();
+            // print(currentTime + " : Sending test data");
+            // sendTestData();
         }
 
 		if (GotTransform) 
 		{
-			// Added in Step 3: Sharing coordinates
-			if (ImportExportAnchorManager.Instance.AnchorEstablished && animationPlayed == false) {
-				// This triggers the animation sequence for the anchor model and 
-				// puts the cool materials on the model.
-				GetComponent<EnergyHubBase>().SendMessage("OnSelect");
-				animationPlayed = true;
-			}
+            Debug.Log("Received transform");
 		}
 		else
         {
@@ -86,22 +79,23 @@ public class HologramPlacement : Singleton<HologramPlacement>
         return retval;
     }
 
+    /// <summary>
+    /// Sends data to help us measure bandwidth and performance
+    /// </summary>
+    private void sendTestData() {
+        Vector3 v = Camera.main.transform.position;
+        // Send 10 vector3's
+        for (int i = 0; i < 10; i++) {
+            CustomMessages.Instance.SendVector3(v);
+        }
+    }
+
     public void OnSelect()
     {
         // Note that we have a transform.
         GotTransform = true;
-
-        // The user has now placed the hologram.
-        // Route input to gazed at holograms.
-        // GestureManager.Instance.OverrideFocusedObject = null;
-		// Commented out in step 3: Sharing our coordinates
-
 		// And send this transform to our friends in the session
 		CustomMessages.Instance.SendStageTransform(transform.localPosition, transform.localRotation);
-
-        // Log this for our analysis
-        noOfCoordinateShares += 1;
-        Debug.Log(noOfCoordinateShares.ToString() + " " + prevDateTime + " Sent the localPosition and localRotation");
     }
 
 	/// <summary>
@@ -111,21 +105,32 @@ public class HologramPlacement : Singleton<HologramPlacement>
 	/// <param name="msg"></param>
 	void OnStageTransfrom(NetworkInMessage msg)
 	{
-		// We read the user ID but we don't use it here.
-		msg.ReadInt64();
+		long senderID = msg.ReadInt64();
+        Debug.Log(senderID.ToString() + " sent us a stage transform.");
 
+        // Set the hologram according to the received transform
 		transform.localPosition = CustomMessages.Instance.ReadVector3(msg);
 		transform.localRotation = CustomMessages.Instance.ReadQuaternion(msg);
-
-		// The first time, we'll want to send the message to the anchor to do its animation and
-		// swap its materials.
-		if (GotTransform == false)
-		{
-			GetComponent<EnergyHubBase>().SendMessage("OnSelect");
-		}
-
+        
 		GotTransform = true;
 	}
+
+    // I'm not so sure how these are getting called...
+
+    // Helper method for receiving vector3's
+    public void OnExperimentalVector3(NetworkInMessage msg) {
+        long senderID = msg.ReadInt64();
+        Vector3 v = CustomMessages.Instance.ReadVector3(msg);
+        Debug.Log(senderID.ToString() + " sent us a vector3 : " + v.ToString());
+    }
+
+    // Helper method for receiving ints
+    public void OnExperimentalInt(NetworkInMessage msg)
+    {
+        long senderID = msg.ReadInt64();
+        int sentInt = msg.ReadInt32();
+        Debug.Log(senderID.ToString() + " sent us an int : " + sentInt.ToString());
+    }
 
     public void ResetStage()
     {
