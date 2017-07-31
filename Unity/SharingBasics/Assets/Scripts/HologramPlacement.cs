@@ -55,13 +55,14 @@ public class HologramPlacement : Singleton<HologramPlacement>
         // Send the data every second
         if (currentTime != prevDateTime) {
             prevDateTime = currentTime;
-            // print(currentTime + " : Sending test data");
-            // sendTestData();
+            print(currentTime + " : Sending test data");
+            sendTestData();
         }
 
 		if (GotTransform) 
 		{
-            Debug.Log("Received transform");
+            // Reset the transform boolean
+            GotTransform = false;
 		}
 		else
         {
@@ -84,9 +85,9 @@ public class HologramPlacement : Singleton<HologramPlacement>
     /// </summary>
     private void sendTestData() {
         Vector3 v = Camera.main.transform.position;
-        // Send 10 vector3's
-        for (int i = 0; i < 10; i++) {
-            CustomMessages.Instance.SendVector3(v);
+        // Send 30 integers
+        for (int i = 0; i < 30; i++) {
+            CustomMessages.Instance.SendInt(i);
         }
     }
 

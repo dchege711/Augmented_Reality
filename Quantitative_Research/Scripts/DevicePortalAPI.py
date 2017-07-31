@@ -69,7 +69,7 @@ def writePerformanceStats(whichHoloLens):
     # Open the file that will be used as output
     currentDir = os.path.dirname(__file__)
     fileName = whichHoloLens + "_" + dt.now().strftime(fileNameDTFormat) + "_HL_Performance.txt"
-    filePath = os.path.join(currentDir, 'Data_Dumps', fileName)
+    filePath = os.path.join(currentDir, fileName)
     outputFile = open(filePath, 'w')
 
     # Include header information to make the output file easily understandable

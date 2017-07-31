@@ -14,7 +14,8 @@ import os
 
 # Useful IP Addresses
 laptopIPv4 = os.environ['LAPTOP_IPV4']
-holoLensIPv4 = os.environ['HL_CHEGE_IPV4']
+holoLensIPv4Chege = os.environ['HL_CHEGE_IPV4']
+holoLensIPv4Maria = os.environ['HL_MARIA_IPV4']
 
 #_______________________________________________________________________________
 
@@ -106,7 +107,7 @@ def getWDPStats(wdpDump):
 
 #_______________________________________________________________________________
 
-def getWiresharkStats(wiresharkDump):
+def getWiresharkStats(wiresharkDump, holoLensName, startingTimeStamp):
     '''
     Returns 4 lists:
         holoLensToLaptop_timeStamps
@@ -124,6 +125,14 @@ def getWiresharkStats(wiresharkDump):
     ...
     '''
     # Initialize relevant variables
+    if holoLensName == 'Chege':
+        holoLensIPv4 = holoLensIPv4Chege
+    elif holoLensName == 'Maria':
+        holoLensIPv4 = holoLensIPv4Maria
+    else:
+        print("Invalid HoloLens name. Valid options: 'Chege', 'Maria'")
+        return
+
     holoLensToLaptop_timeStamps = []
     holoLensToLaptop_packets = []
     laptopToHoloLens_timeStamps = []
@@ -136,8 +145,8 @@ def getWiresharkStats(wiresharkDump):
         headerInfo = myData.readline()
 
         # Initialize helper variables
-        prevTimeStampSent = "2017-07-19 16:02:02"
-        prevTimeStampReceived = "2017-07-19 16:02:02"
+        prevTimeStampSent = startingTimeStamp
+        prevTimeStampReceived = startingTimeStamp
         runningDataSumSent = 0
         runningDataSumReceived = 0
         TIME = 1
@@ -148,7 +157,7 @@ def getWiresharkStats(wiresharkDump):
         for line in myData:
             line = line.replace('"', '')    # Urgh, why did Wireshark do this?
             items = line.split(",")
-            timeStamp = items[TIME].split('.')[0]
+            timeStamp = items[TIME].split('.')[0].split()[1]
             packets = int(items[LENGTH])
 
             if items[SOURCE] == holoLensIPv4:
@@ -159,9 +168,9 @@ def getWiresharkStats(wiresharkDump):
                 else:
                     holoLensToLaptop_timeStamps.append(prevTimeStampSent)
                     holoLensToLaptop_packets.append(runningDataSumSent)
+                    # print(prevTimeStampSent, str(runningDataSumSent))
                     prevTimeStampSent = timeStamp
                     runningDataSumSent = packets
-                    print(timeStamp, str(packets))
 
 
             elif items[DESTINATION] == holoLensIPv4:
@@ -176,18 +185,14 @@ def getWiresharkStats(wiresharkDump):
                     runningDataSumReceived = packets
 
     # Communicate status to terminal
-    print(  "Sent {0:.2f} packets".format(sent),
-            ", received {0:.2f} packets".format(received),
-            ", total = {0:.2f} packets".format((sent+received))
+    print(  holoLensName, "\t: Sent {0:12,d} packets\t ".format(sent),
+            "Received {0:12,d} packets".format(received)
     )
-    print("\nSent Array Length", str(len(holoLensToLaptop_timeStamps)), "/", str(len(holoLensToLaptop_packets)))
-    print("\nReceived Array Length", str(len(laptopToHoloLens_timeStamps)), "/", str(len(laptopToHoloLens_packets)))
-
     return (holoLensToLaptop_timeStamps, holoLensToLaptop_packets, laptopToHoloLens_timeStamps, laptopToHoloLens_packets)
 
 #_______________________________________________________________________________
 
-def getHLPerformanceStats(hlConsoleDump):
+def getHLPerformanceStats(hlConsoleDump, firstTimeStamp):
     '''
     Sample Data
     TimeStamp	CPULoad	DedicatedMemory	DedicatedMemoryUsed	SystemMemory	SystemMemoryUsed	EnginesUtilization
@@ -204,7 +209,7 @@ def getHLPerformanceStats(hlConsoleDump):
         systemMemoryUsed = []
         engineOne = []
         restOfEngines = [] # I think the other engines are never engaged...
-        prevTimeStamp = "11:16:23" # Should be the first timestamp in the file
+        prevTimeStamp = firstTimeStamp
 
         cpuSum = 0
         dedicatedMemSum = 0
@@ -251,7 +256,7 @@ def getHLPerformanceStats(hlConsoleDump):
                 systemMemoryUsed.append(systemMemSum / itemsInThatSecond)
                 engineOne.append(engineOneSum / itemsInThatSecond)
                 restOfEngines.append(restOfEnginesSum / itemsInThatSecond)
-
+                # print(prevTimeStamp, str(cpuSum / itemsInThatSecond))
                 # Reset the variables
                 cpuSum, dedicatedMemSum, systemMemSum, engineOneSum = (0, 0, 0, 0)
                 restOfEnginesSum, itemsInThatSecond = (0, 0)
@@ -267,13 +272,12 @@ def getHLPerformanceStats(hlConsoleDump):
                 engineOneSum += float(items[5][0])
                 restOfEnginesSum += float(items[5][1])
 
-    print(str(len(timeStamps)), "time stamps,", str(len(cpuLoad)), "CPU measurements.")
+    print("Successfully extracted", str(len(timeStamps)), "seconds of hololens data")
     return timeStamps, cpuLoad, dedicatedMemoryUsed, systemMemoryUsed, engineOne, restOfEngines
-
 
 #_______________________________________________________________________________
 
-def compareDataOnGraph(title, plotData):
+def compareDataOnGraph(title, plotData, xyLabels, usesTimeStamps = False):
     '''
     Plots multiple graphs on the same figure
     'title' is a string which will be set as the graph's title
@@ -292,16 +296,21 @@ def compareDataOnGraph(title, plotData):
 
     plt.figure(1)
     plt.grid(True)
-    plt.xlabel('Time')
-    # plt.ylabel('Rate of Data Transfer (packets))')
+    plt.xlabel(xyLabels[0])
+    plt.ylabel(xyLabels[1])
     plt.title(title)
-    formatSrings = ['b-', 'r-', 'c-', 'm-', 'g-', 'b-']
+    formatSrings = ['b', 'r', 'c', 'm', 'g']
 
     index = 0
     for dataset in plotData:
-        timeData = pd.to_datetime(dataset[0])
-        plt.plot_date(x = timeData, y = dataset[1],
-                      fmt = formatSrings[index % len(formatSrings)],
+        if usesTimeStamps:
+            timeData = pd.to_datetime(dataset[0])
+            plt.plot_date( x = timeData, y = dataset[1],
+                           fmt = formatSrings[index % len(formatSrings)],
+                           label = dataset[2])
+        else:
+            plt.plot( dataset[0], dataset[1],
+                      color = formatSrings[index % len(formatSrings)],
                       label = dataset[2])
         index += 1
 
@@ -310,15 +319,37 @@ def compareDataOnGraph(title, plotData):
 
 #_______________________________________________________________________________
 
+def getRange(timeStampsArray):
+    # print(list(range(1, len(timeStampsArray) + 1)))
+    return list(range(0, len(timeStampsArray) + 0))
+
+def getCumSum(arrayOfValues):
+    cumSumArray = []
+    cumsum = 0
+    for i in range(len(arrayOfValues)):
+        cumsum += arrayOfValues[i]
+        cumSumArray.append(cumsum)
+    # print(cumSumArray)
+    return cumSumArray
+
 def main():
-    # wdpStats = getWDPStats('Origami_Windows_Device_Portal.csv')
-    # wiresharkStats = getWiresharkStats('Chege_Maria_Wireshark_07271121.csv')
-    hololensStats = getHLPerformanceStats('Chege_07-27-11_16_HL_Performance.txt')
+    # wiresharkStats ==> hlToLap_timeStamps, hlToLap_packets, lapToHl_timeStamps, lapToHls_packets
+    # hlPerfStats ==> timeStamps, cpuLoad, dedicatedMemoryUsed, systemMemoryUsed, engineOne, restOfEngines
+    chegeWireshark10v = getWiresharkStats('Chege_Maria_Wireshark_07311256_10vectors.csv', 'Chege', '12:53:27')
+    chegeWireshark20v = getWiresharkStats('Chege_Maria_Wireshark_07311427_20vectors.csv', 'Chege', '14:24:09')
+    chegeWireshark30i = getWiresharkStats('Chege_Maria_Wireshark_07311544_30ints.csv', 'Chege', '15:39:04')
+    mariaWireshark30i = getWiresharkStats('Chege_Maria_Wireshark_07311544_30ints.csv', 'Maria', '15:39:04')
+    # mariaWireshark = getWiresharkStats('Chege_Maria_Wireshark_07311256.csv', 'Maria', '12:53:27')
+    # chegeHLStats = getHLPerformanceStats('Chege_07-31-12_53_HL_Performance.txt', '12:53:39')
+    # mariaHLStats = getHLPerformanceStats('Maria_07-31-12_53_HL_Performance.txt', '12:53:42')
     plotData = [
-        (hololensStats[0], hololensStats[1], "CPU Load"),
-        (hololensStats[0], hololensStats[4], "Engine One")
+        (getRange(chegeWireshark10v[0]), getCumSum(chegeWireshark10v[1]), "Chege HL to Laptop (10 vectors per sec)"),
+        (getRange(chegeWireshark30i[0]), getCumSum(chegeWireshark30i[1]), "Chege HL to Laptop (30 ints per sec)"),
+        (getRange(chegeWireshark20v[0]), getCumSum(chegeWireshark20v[1]), "Chege HL to Laptop (20 vectors per sec)")
+        # (getRange(mariaWireshark30i[2]), getCumSum(mariaWireshark30i[3]), "Laptop to Maria HL Packets (30 ints every second)")
     ]
-    compareDataOnGraph("HoloLens Performance Stats", plotData)
+    xyLabels = ['Time in Seconds', 'Cumulative Sum of Packets Transferred']
+    compareDataOnGraph("Stats", plotData, xyLabels)
 
 #_______________________________________________________________________________
 

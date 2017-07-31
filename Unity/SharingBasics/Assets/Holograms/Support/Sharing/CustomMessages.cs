@@ -200,19 +200,14 @@ public class CustomMessages : Singleton<CustomMessages>
 
         else {
 
-            var hologramPlacementScript = GetComponent<HologramPlacement>();
-
-            print("The message handler was actaully null for " + messageType.ToString() + " Type of script call: " + hologramPlacementScript.ToString());
-            // ... Therefore, I'll do call the functions manually for my methods (2/2)
-
             if (messageType.ToString() == "185") {
                 // ExperimentalVector3
-                hologramPlacementScript.OnExperimentalVector3(msg);
+                print("Received a vector3 from " + msg.ReadInt64().ToString());
             }
 
             else if (messageType.ToString() == "186") {
                 // ExperimentalInt
-                hologramPlacementScript.OnExperimentalInt(msg);
+                print("Received an int from " + msg.ReadInt64().ToString());
             }
 
         }
