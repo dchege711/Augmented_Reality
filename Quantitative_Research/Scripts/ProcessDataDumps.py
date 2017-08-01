@@ -17,6 +17,18 @@ laptopIPv4 = os.environ['LAPTOP_IPV4']
 holoLensIPv4Chege = os.environ['HL_CHEGE_IPV4']
 holoLensIPv4Maria = os.environ['HL_MARIA_IPV4']
 
+dataPath = 'C:/Users/dchege711/Documents/Augmented_Reality/Quantitative_Research/Data_Dumps/Report_03/'
+
+data = {
+    'noData_data'       : [dataPath + '08-01-12_45_59_Wireshark_noData.csv', '12:45:59'],
+    'noData_Chege'      : [dataPath + '08-01-12_41_45_HL_Performance_Chege_noData.txt', '12:41:45'],
+    'noData_Maria'      : [dataPath + '08-01-12_41_51_HL_Performance_Maria_noData.txt', '12:41:51'],
+    '10vectors_data'    : [dataPath + '07-31-12_53_27_Wireshark_10vectors.csv', '12:53:27'],
+    '30ints_data'       : [dataPath + '08-01-11_08_15_Wireshark_30ints.csv', '11:08:15'],
+    '30ints_Chege'      : [dataPath + '08-01-11_07_59_HL_Performance_Chege_30ints.txt', '11:07:59'],
+    '30ints_Maria'      : [dataPath + '08-01-11_08_02_HL_Performance_Maria_30ints.txt', '11:08:02']
+}
+
 #_______________________________________________________________________________
 
 def getWDPStats(wdpDump):
@@ -335,18 +347,12 @@ def getCumSum(arrayOfValues):
 def main():
     # wiresharkStats ==> hlToLap_timeStamps, hlToLap_packets, lapToHl_timeStamps, lapToHls_packets
     # hlPerfStats ==> timeStamps, cpuLoad, dedicatedMemoryUsed, systemMemoryUsed, engineOne, restOfEngines
-    chegeWireshark10v = getWiresharkStats('Chege_Maria_Wireshark_07311256_10vectors.csv', 'Chege', '12:53:27')
-    chegeWireshark20v = getWiresharkStats('Chege_Maria_Wireshark_07311427_20vectors.csv', 'Chege', '14:24:09')
-    chegeWireshark30i = getWiresharkStats('Chege_Maria_Wireshark_07311544_30ints.csv', 'Chege', '15:39:04')
-    mariaWireshark30i = getWiresharkStats('Chege_Maria_Wireshark_07311544_30ints.csv', 'Maria', '15:39:04')
-    # mariaWireshark = getWiresharkStats('Chege_Maria_Wireshark_07311256.csv', 'Maria', '12:53:27')
-    # chegeHLStats = getHLPerformanceStats('Chege_07-31-12_53_HL_Performance.txt', '12:53:39')
-    # mariaHLStats = getHLPerformanceStats('Maria_07-31-12_53_HL_Performance.txt', '12:53:42')
+    chegeWireshark30i = getWiresharkStats(data['30ints_data'][0], 'Chege', data['30ints_data'][1])
+    chegeWireshark10v = getWiresharkStats(data['10vectors_data'][0], 'Chege', data['10vectors_data'][1])
+
     plotData = [
-        (getRange(chegeWireshark10v[0]), getCumSum(chegeWireshark10v[1]), "Chege HL to Laptop (10 vectors per sec)"),
         (getRange(chegeWireshark30i[0]), getCumSum(chegeWireshark30i[1]), "Chege HL to Laptop (30 ints per sec)"),
-        (getRange(chegeWireshark20v[0]), getCumSum(chegeWireshark20v[1]), "Chege HL to Laptop (20 vectors per sec)")
-        # (getRange(mariaWireshark30i[2]), getCumSum(mariaWireshark30i[3]), "Laptop to Maria HL Packets (30 ints every second)")
+        (getRange(chegeWireshark10v[0]), getCumSum(chegeWireshark10v[1]), "Chege HL to Laptop (10 vectors per sec)")
     ]
     xyLabels = ['Time in Seconds', 'Cumulative Sum of Packets Transferred']
     compareDataOnGraph("Stats", plotData, xyLabels)

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Windows.Speech;
 using System;
+using System.Diagnostics;
 
 
 // Step 3: Sharing coordinates
@@ -52,11 +53,19 @@ public class HologramPlacement : Singleton<HologramPlacement>
     void Update()
     {
         string currentTime = System.DateTime.Now.ToString();
+
         // Send the data every second
         if (currentTime != prevDateTime) {
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
+
             prevDateTime = currentTime;
-            print(currentTime + " : Sending test data");
             sendTestData();
+
+            // Log this event
+            stopWatch.Stop();
+            double elapsed = Convert.ToDouble(stopWatch.ElapsedMilliseconds) / 1000.0;
+            UnityEngine.Debug.Log(currentTime + ": Sent test data in " + elapsed.ToString() + " s");
         }
 
 		if (GotTransform) 
@@ -85,9 +94,9 @@ public class HologramPlacement : Singleton<HologramPlacement>
     /// </summary>
     private void sendTestData() {
         Vector3 v = Camera.main.transform.position;
-        // Send 30 integers
-        for (int i = 0; i < 30; i++) {
-            CustomMessages.Instance.SendInt(i);
+        // Send 10 vectors
+        for (int i = 0; i < 8000; i++) {
+            CustomMessages.Instance.SendVector3(v);
         }
     }
 
@@ -107,7 +116,7 @@ public class HologramPlacement : Singleton<HologramPlacement>
 	void OnStageTransfrom(NetworkInMessage msg)
 	{
 		long senderID = msg.ReadInt64();
-        Debug.Log(senderID.ToString() + " sent us a stage transform.");
+        UnityEngine.Debug.Log(senderID.ToString() + " sent us a stage transform.");
 
         // Set the hologram according to the received transform
 		transform.localPosition = CustomMessages.Instance.ReadVector3(msg);
@@ -122,7 +131,7 @@ public class HologramPlacement : Singleton<HologramPlacement>
     public void OnExperimentalVector3(NetworkInMessage msg) {
         long senderID = msg.ReadInt64();
         Vector3 v = CustomMessages.Instance.ReadVector3(msg);
-        Debug.Log(senderID.ToString() + " sent us a vector3 : " + v.ToString());
+        // UnityEngine.Debug.Log(senderID.ToString() + " sent us a vector3 : " + v.ToString());
     }
 
     // Helper method for receiving ints
@@ -130,7 +139,7 @@ public class HologramPlacement : Singleton<HologramPlacement>
     {
         long senderID = msg.ReadInt64();
         int sentInt = msg.ReadInt32();
-        Debug.Log(senderID.ToString() + " sent us an int : " + sentInt.ToString());
+        // UnityEngine.Debug.Log(senderID.ToString() + " sent us an int : " + sentInt.ToString());
     }
 
     public void ResetStage()

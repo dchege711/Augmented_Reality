@@ -58,7 +58,7 @@ def logPerformanceStats(outputFile, whichHoloLens):
 
 #_______________________________________________________________________________
 
-def writePerformanceStats(whichHoloLens):
+def writePerformanceStats(whichHoloLens, whichTest):
     '''
     Creates a time-stamped data file and calls writePerformanceStats()
     To stop logging, use the keyboard interrupt (Command + C)
@@ -67,9 +67,10 @@ def writePerformanceStats(whichHoloLens):
     print("Writing performance stats...")
 
     # Open the file that will be used as output
-    currentDir = os.path.dirname(__file__)
-    fileName = whichHoloLens + "_" + dt.now().strftime(fileNameDTFormat) + "_HL_Performance.txt"
-    filePath = os.path.join(currentDir, fileName)
+    path = "C:/Users/dchege711/Documents/Augmented_Reality/Quantitative_Research/Data_Dumps/Report_03/"
+    fileName = dt.now().strftime(fileNameDTFormat) + "_HL_Performance_" + whichHoloLens + whichTest + ".txt"
+    # filePath = os.path.join(path, fileName)
+    filePath = path + fileName
     outputFile = open(filePath, 'w')
 
     # Include header information to make the output file easily understandable
@@ -87,6 +88,6 @@ def writePerformanceStats(whichHoloLens):
 #_______________________________________________________________________________
 
 if __name__ == '__main__':
-    writePerformanceStats(sys.argv[1])
+    writePerformanceStats(sys.argv[1], sys.argv[2])
 
 #_______________________________________________________________________________

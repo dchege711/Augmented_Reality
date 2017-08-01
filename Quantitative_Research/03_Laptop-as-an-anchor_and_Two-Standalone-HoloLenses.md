@@ -34,3 +34,5 @@
     * 10 Vector3's every second, each Vector3 being sent separately.
     * 30 ints every second, each int being sent separately.
     * 20 Vector3's every second, each Vector3 being sent separately.
+
+* Unity uses the UDP protocol to send messages, so we also filtered based on that.

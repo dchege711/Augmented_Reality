@@ -2,6 +2,7 @@
 using Academy.HoloToolkit.Unity;
 using System.Collections.Generic;
 using System;
+using System.Diagnostics;
 using UnityEngine;
 using System.Collections;
 
@@ -49,6 +50,10 @@ public class CustomMessages : Singleton<CustomMessages>
     /// functions of this class
     /// </summary>
     NetworkConnectionAdapter connectionAdapter;
+
+    /// <summary>
+    /// Useful for timing so that I can approximate the upper limit of the number of broadcasts per second
+    /// </summary>
 
     /// <summary>
     /// Cache the connection object for the sharing service
@@ -129,7 +134,7 @@ public class CustomMessages : Singleton<CustomMessages>
             // Attach the stage transform to the message
             AppendTransform(msg, position, rotation);
             // Log for debugging purposes
-            Debug.Log(getDateTime() + " Sent Stage Transform.");
+            UnityEngine.Debug.Log(getDateTime() + " Sent Stage Transform.");
             // Broadcast the message to the network
             BroadcastThisMessage(msg);
         }
@@ -143,10 +148,10 @@ public class CustomMessages : Singleton<CustomMessages>
             NetworkOutMessage msg = CreateMessage((byte)TestMessageID.ExperimentalVector3);
             // Attach the vector to the message
             AppendVector3(msg, v);
-            // Log this event
-            Debug.Log(getDateTime() + " Sent experimental Vector3");
             // Broadcast this to the network
             BroadcastThisMessage(msg);
+            // Log this event
+            // UnityEngine.Debug.Log(getDateTime() + " Sent experimental Vector3");
         }
     }
 
@@ -157,10 +162,10 @@ public class CustomMessages : Singleton<CustomMessages>
             NetworkOutMessage msg = CreateMessage((byte)TestMessageID.ExperimentalInt);
             // Attach the integer to the message
             msg.Write(myInt);
-            // Log this event
-            Debug.Log(getDateTime() + " Sent experimental integer");
             // Broadcast this to the network
             BroadcastThisMessage(msg);
+            // Log this event
+            // UnityEngine.Debug.Log(getDateTime() + " Sent experimental integer");
         }
     }
 
@@ -198,19 +203,19 @@ public class CustomMessages : Singleton<CustomMessages>
             messageHandler(msg);
         }
 
-        else {
+        //else {
 
-            if (messageType.ToString() == "185") {
-                // ExperimentalVector3
-                print("Received a vector3 from " + msg.ReadInt64().ToString());
-            }
+        //    if (messageType.ToString() == "185") {
+        //        // ExperimentalVector3
+        //        print("Received a vector3 from " + msg.ReadInt64().ToString());
+        //    }
 
-            else if (messageType.ToString() == "186") {
-                // ExperimentalInt
-                print("Received an int from " + msg.ReadInt64().ToString());
-            }
+        //    else if (messageType.ToString() == "186") {
+        //        // ExperimentalInt
+        //        print("Received an int from " + msg.ReadInt64().ToString());
+        //    }
 
-        }
+        // }
     }
 
     #region HelperFunctionsForWriting
