@@ -41,8 +41,8 @@ namespace Academy.HoloToolkit.Unity
 
             if (GazeManager.Instance.Hit)
             {
-                CursorOnHolograms.SetActive(true);
-                CursorOffHolograms.SetActive(false);
+                CursorOnHolograms.SetActive(false);
+                CursorOffHolograms.SetActive(true);
             }
             else
             {
