@@ -360,12 +360,17 @@ def getCumSum(arrayOfValues):
 def main():
     # wiresharkStats ==> hlToLap_timeStamps, hlToLap_packets, lapToHl_timeStamps, lapToHls_packets
     # hlPerfStats ==> timeStamps, cpuLoad, dedicatedMemoryUsed, systemMemoryUsed, engineOne, restOfEngines
-    chegeData12kI = getWiresharkStats(data['12kInts_data'][0], 'Chege', data['30ints_data'][1])
-    chegeData12kIUDP = getWiresharkStats(data['12kInts_data'][0], 'Chege', data['10vectors_data'][1], udpFilter = True)
+    noData = getWiresharkStats(data['noData_data'][0], 'Chege', data['noData_data'][1])
+    noDataUDP = getWiresharkStats(data['noData_data'][0], 'Chege', data['noData_data'][1], udpFilter = True)
+    chegeData12kI = getWiresharkStats(data['12kInts_data'][0], 'Chege', data['12kInts_data'][1])
+    chegeData12kIUDP = getWiresharkStats(data['12kInts_data'][0], 'Chege', data['12kInts_data'][1], udpFilter = True)
+    # print(noDataUDP[1])
 
     plotData = [
         (getRange(chegeData12kI[0]), getCumSum(chegeData12kI[1]), "HL to Laptop: All Protocols, 12k ints per sec"),
-        (getRange(chegeData12kIUDP[0]), getCumSum(chegeData12kIUDP[1]), "HL to Laptop: UDP Protocol, 12k ints per sec")
+        (getRange(chegeData12kIUDP[0]), getCumSum(chegeData12kIUDP[1]), "HL to Laptop: UDP Only, 12k ints per sec"),
+        (getRange(noData[0]), getCumSum(noData[1]), "No Experimental Data: All Protocols"),
+        (getRange(noDataUDP[0]), getCumSum(noDataUDP[1]), "No Experimental Data: UDP Only")
     ]
     xyLabels = ['Time in Seconds', 'Cumulative Sum of Packets Transferred']
     compareDataOnGraph("Comparing General Data to UDP Protocol Data", plotData, xyLabels)

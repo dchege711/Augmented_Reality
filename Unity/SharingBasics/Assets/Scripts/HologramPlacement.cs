@@ -56,16 +56,16 @@ public class HologramPlacement : Singleton<HologramPlacement>
 
         // Send the data every second
         if (currentTime != prevDateTime) {
-            Stopwatch stopWatch = new Stopwatch();
-            stopWatch.Start();
+            //Stopwatch stopWatch = new Stopwatch();
+            //stopWatch.Start();
 
             prevDateTime = currentTime;
-            sendTestData();
+            //sendTestData();
 
-            // Log this event
-            stopWatch.Stop();
-            double elapsed = Convert.ToDouble(stopWatch.ElapsedMilliseconds) / 1000.0;
-            UnityEngine.Debug.Log(currentTime + ": Sent test data in " + elapsed.ToString() + " s");
+            //// Log this event
+            //stopWatch.Stop();
+            //double elapsed = Convert.ToDouble(stopWatch.ElapsedMilliseconds) / 1000.0;
+            //UnityEngine.Debug.Log(currentTime + ": Sent test data in " + elapsed.ToString() + " s");
         }
 
 		if (GotTransform) 
@@ -94,9 +94,9 @@ public class HologramPlacement : Singleton<HologramPlacement>
     /// </summary>
     private void sendTestData() {
         Vector3 v = Camera.main.transform.position;
-        // Send 10 vectors
-        for (int i = 0; i < 8000; i++) {
-            CustomMessages.Instance.SendVector3(v);
+        // Send 12k ints
+        for (int i = 0; i < 12000; i++) {
+            CustomMessages.Instance.SendInt(i);
         }
     }
 
