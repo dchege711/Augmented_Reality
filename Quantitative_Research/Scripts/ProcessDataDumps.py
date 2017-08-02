@@ -23,10 +23,15 @@ data = {
     'noData_data'       : [dataPath + '08-01-12_45_59_Wireshark_noData.csv', '12:45:59'],
     'noData_Chege'      : [dataPath + '08-01-12_41_45_HL_Performance_Chege_noData.txt', '12:41:45'],
     'noData_Maria'      : [dataPath + '08-01-12_41_51_HL_Performance_Maria_noData.txt', '12:41:51'],
-    '10vectors_data'    : [dataPath + '07-31-12_53_27_Wireshark_10vectors.csv', '12:53:27'],
-    '30ints_data'       : [dataPath + '08-01-11_08_15_Wireshark_30ints.csv', '11:08:15'],
-    '30ints_Chege'      : [dataPath + '08-01-11_07_59_HL_Performance_Chege_30ints.txt', '11:07:59'],
-    '30ints_Maria'      : [dataPath + '08-01-11_08_02_HL_Performance_Maria_30ints.txt', '11:08:02']
+    '4kVectors_data'    : [dataPath + '08-01-13_36_13_Wireshark_4kVectors.csv', '13:36:13'],
+    '4kVectors_Chege'   : [dataPath + '08-01-13_36_22_HL_Performance_Chege_4kVectors.txt', '13:36:22'],
+    '4kVectors_Maria'   : [dataPath + '08-01-13_36_25_HL_Performance_Maria_4kVectors.txt', '13:36:25'],
+    '8kVectors_data'    : [dataPath + '08-01-18_10_12_Wireshark_8kVectors.csv', '18:10:12'],
+    '8kVectors_Chege'   : [dataPath + '08-01-18_10_20_HL_Performance_Chege_8kVectors.txt', '18:10:20'],
+    '8kVectors_Maria'   : [dataPath + '08-01-18_10_26_HL_Performance_Maria_8kVectors.txt', '18:10:26'],
+    '12kInts_data'      : [dataPath + '08-02-09_44_42_Wireshark_12kInts.csv', '09:44:42'],
+    '12kInts_Chege'     : [dataPath + '08-02-09_44_55_HL_Performance_Chege_12kInts.txt', '09:44:55'],
+    '12kInts_Maria'     : [dataPath + '08-02-09_44_54_HL_Performance_Maria_12kInts.txt', '09:44:54']
 }
 
 #_______________________________________________________________________________
@@ -119,7 +124,7 @@ def getWDPStats(wdpDump):
 
 #_______________________________________________________________________________
 
-def getWiresharkStats(wiresharkDump, holoLensName, startingTimeStamp):
+def getWiresharkStats(wiresharkDump, holoLensName, startingTimeStamp, udpFilter = False):
     '''
     Returns 4 lists:
         holoLensToLaptop_timeStamps
@@ -164,6 +169,7 @@ def getWiresharkStats(wiresharkDump, holoLensName, startingTimeStamp):
         TIME = 1
         SOURCE = 2
         DESTINATION = 3
+        PROTOCOL = 4
         LENGTH = 5
 
         for line in myData:
@@ -172,7 +178,14 @@ def getWiresharkStats(wiresharkDump, holoLensName, startingTimeStamp):
             timeStamp = items[TIME].split('.')[0].split()[1]
             packets = int(items[LENGTH])
 
-            if items[SOURCE] == holoLensIPv4:
+            # If specified, filter on the UDP protocol
+            # System data uses TCP, but game data is sent over UDP
+            if udpFilter:
+                countThisItem = items[PROTOCOL] == 'UDP'
+            else:
+                countThisItem = True
+
+            if items[SOURCE] == holoLensIPv4 and countThisItem:
                 sent += packets
                 if timeStamp == prevTimeStampSent:
                     runningDataSumSent += packets
@@ -185,7 +198,7 @@ def getWiresharkStats(wiresharkDump, holoLensName, startingTimeStamp):
                     runningDataSumSent = packets
 
 
-            elif items[DESTINATION] == holoLensIPv4:
+            elif items[DESTINATION] == holoLensIPv4 and countThisItem:
 
                 received += packets
                 if timeStamp == prevTimeStampReceived:
@@ -347,15 +360,15 @@ def getCumSum(arrayOfValues):
 def main():
     # wiresharkStats ==> hlToLap_timeStamps, hlToLap_packets, lapToHl_timeStamps, lapToHls_packets
     # hlPerfStats ==> timeStamps, cpuLoad, dedicatedMemoryUsed, systemMemoryUsed, engineOne, restOfEngines
-    chegeWireshark30i = getWiresharkStats(data['30ints_data'][0], 'Chege', data['30ints_data'][1])
-    chegeWireshark10v = getWiresharkStats(data['10vectors_data'][0], 'Chege', data['10vectors_data'][1])
+    chegeData12kI = getWiresharkStats(data['12kInts_data'][0], 'Chege', data['30ints_data'][1])
+    chegeData12kIUDP = getWiresharkStats(data['12kInts_data'][0], 'Chege', data['10vectors_data'][1], udpFilter = True)
 
     plotData = [
-        (getRange(chegeWireshark30i[0]), getCumSum(chegeWireshark30i[1]), "Chege HL to Laptop (30 ints per sec)"),
-        (getRange(chegeWireshark10v[0]), getCumSum(chegeWireshark10v[1]), "Chege HL to Laptop (10 vectors per sec)")
+        (getRange(chegeData12kI[0]), getCumSum(chegeData12kI[1]), "HL to Laptop: All Protocols, 12k ints per sec"),
+        (getRange(chegeData12kIUDP[0]), getCumSum(chegeData12kIUDP[1]), "HL to Laptop: UDP Protocol, 12k ints per sec")
     ]
     xyLabels = ['Time in Seconds', 'Cumulative Sum of Packets Transferred']
-    compareDataOnGraph("Stats", plotData, xyLabels)
+    compareDataOnGraph("Comparing General Data to UDP Protocol Data", plotData, xyLabels)
 
 #_______________________________________________________________________________
 
