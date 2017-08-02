@@ -128,9 +128,9 @@ def getWiresharkStats(wiresharkDump, holoLensName, startingTimeStamp, udpFilter 
     '''
     Returns 4 lists:
         holoLensToLaptop_timeStamps
-        holoLensToLaptop_packets
+        holoLensToLaptop_MB
         laptopToHoloLens_timeStamps
-        laptopToHoloLens_packets
+        laptopToHoloLens_MB
 
     '''
     '''
@@ -151,9 +151,9 @@ def getWiresharkStats(wiresharkDump, holoLensName, startingTimeStamp, udpFilter 
         return
 
     holoLensToLaptop_timeStamps = []
-    holoLensToLaptop_packets = []
+    holoLensToLaptop_MB = []
     laptopToHoloLens_timeStamps = []
-    laptopToHoloLens_packets = []
+    laptopToHoloLens_MB = []
 
     sent = 0
     received = 0
@@ -176,7 +176,7 @@ def getWiresharkStats(wiresharkDump, holoLensName, startingTimeStamp, udpFilter 
             line = line.replace('"', '')    # Urgh, why did Wireshark do this?
             items = line.split(",")
             timeStamp = items[TIME].split('.')[0].split()[1]
-            packets = int(items[LENGTH])
+            numOfBytes = int(items[LENGTH])
 
             # If specified, filter on the UDP protocol
             # System data uses TCP, but game data is sent over UDP
@@ -188,32 +188,32 @@ def getWiresharkStats(wiresharkDump, holoLensName, startingTimeStamp, udpFilter 
             if items[SOURCE] == holoLensIPv4 and countThisItem:
                 sent += packets
                 if timeStamp == prevTimeStampSent:
-                    runningDataSumSent += packets
+                    runningDataSumSent += numOfBytes
                     # print(str(packets), end = " + ")
                 else:
                     holoLensToLaptop_timeStamps.append(prevTimeStampSent)
-                    holoLensToLaptop_packets.append(runningDataSumSent)
+                    holoLensToLaptop_MB.append(runningDataSumSent / (1024 * 1024.0))
                     # print(prevTimeStampSent, str(runningDataSumSent))
                     prevTimeStampSent = timeStamp
-                    runningDataSumSent = packets
+                    runningDataSumSent = numOfBytes
 
 
             elif items[DESTINATION] == holoLensIPv4 and countThisItem:
 
                 received += packets
                 if timeStamp == prevTimeStampReceived:
-                    runningDataSumReceived += packets
+                    runningDataSumReceived += numOfBytes
                 else:
                     laptopToHoloLens_timeStamps.append(prevTimeStampReceived)
-                    laptopToHoloLens_packets.append(runningDataSumReceived)
+                    laptopToHoloLens_MB.append(runningDataSumReceived / (1024 * 1024.0))
                     prevTimeStampReceived = timeStamp
-                    runningDataSumReceived = packets
+                    runningDataSumReceived = numOfBytes
 
     # Communicate status to terminal
     print(  holoLensName, "\t: Sent {0:12,d} packets\t ".format(sent),
             "Received {0:12,d} packets".format(received)
     )
-    return (holoLensToLaptop_timeStamps, holoLensToLaptop_packets, laptopToHoloLens_timeStamps, laptopToHoloLens_packets)
+    return (holoLensToLaptop_timeStamps, holoLensToLaptop_MB, laptopToHoloLens_timeStamps, laptopToHoloLens_MB)
 
 #_______________________________________________________________________________
 
