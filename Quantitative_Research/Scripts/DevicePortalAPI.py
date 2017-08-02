@@ -68,7 +68,7 @@ def writePerformanceStats(whichHoloLens, whichTest):
 
     # Open the file that will be used as output
     path = "C:/Users/dchege711/Documents/Augmented_Reality/Quantitative_Research/Data_Dumps/Report_03/"
-    fileName = dt.now().strftime(fileNameDTFormat) + "_HL_Performance_" + whichHoloLens + whichTest + ".txt"
+    fileName = dt.now().strftime(fileNameDTFormat) + "_HL_Performance_" + whichHoloLens + "_" + whichTest + ".txt"
     # filePath = os.path.join(path, fileName)
     filePath = path + fileName
     outputFile = open(filePath, 'w')
