@@ -200,7 +200,7 @@ public class CustomMessages : Singleton<CustomMessages>
         if (messageHandler != null)
         {
             // I don't understand how messageHandler isn't null for StageTransform... (1/2)
-            print("Successfully read message handler : " + messageType.ToString());
+            UnityEngine.Debug.Log("Successfully read message handler : " + messageType.ToString());
             messageHandler(msg);
         }
 
@@ -212,7 +212,7 @@ public class CustomMessages : Singleton<CustomMessages>
                 count += 1;
                 if (count % 1000 == 0)
                 {
-                    print("Received a vector3 from " + msg.ReadInt64().ToString());
+                    UnityEngine.Debug.Log("Received a vector3 from " + msg.ReadInt64().ToString());
                 }
             }
 
@@ -221,7 +221,7 @@ public class CustomMessages : Singleton<CustomMessages>
                 // ExperimentalInt
                 count += 1;
                 if (count % 1000 == 0) {
-                    print("Received an int from " + msg.ReadInt64().ToString());
+                    UnityEngine.Debug.Log("Received an int from " + msg.ReadInt64().ToString());
                 }
             }
 
