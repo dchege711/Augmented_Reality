@@ -210,8 +210,9 @@ def getWiresharkStats(label, wiresharkDump, holoLensName, startingTimeStamp, udp
                     runningDataSumReceived = numOfBytes
 
     # Communicate status to terminal
-    print(  "{0:15}".format(label) + "{0:8}".format(holoLensName), "Sent : {0:6,.2f} MB  ".format(sent/ (1024 * 1024.0)),
-            "Received : {0:6,.2f} MB".format(received/ (1024 * 1024.0))
+    print(  "{0:18}".format(label) + "{0:8}".format(holoLensName),
+            "Sent : {0:6,.2f} MB".format(sent/ (1024 * 1024.0)), "({0:3d} sec)  ".format(len(holoLensToLaptop_timeStamps)),
+            "Received : {0:6,.2f} MB".format(received/ (1024 * 1024.0)), "({0:3d} sec)".format(len(laptopToHoloLens_timeStamps))
     )
     return (holoLensToLaptop_timeStamps, holoLensToLaptop_MB, laptopToHoloLens_timeStamps, laptopToHoloLens_MB)
 
@@ -357,7 +358,7 @@ def getCumSum(arrayOfValues):
     # print(cumSumArray)
     return cumSumArray
 
-def queryWiresharkStats(keyName, holoLensName, f = False):
+def queryWiresharkStats(keyName, holoLensName, f = True):
     return getWiresharkStats(keyName, data[keyName][0], holoLensName, data[keyName][1], udpFilter = f)
 
 def main():

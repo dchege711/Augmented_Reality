@@ -56,19 +56,19 @@ public class HologramPlacement : Singleton<HologramPlacement>
 
         // Send the data every second
         if (currentTime != prevDateTime) {
-            //Stopwatch stopWatch = new Stopwatch();
-            //stopWatch.Start();
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
 
             prevDateTime = currentTime;
-            //sendTestData();
+            sendTestData();
 
-            //// Log this event
-            //stopWatch.Stop();
-            //double elapsed = Convert.ToDouble(stopWatch.ElapsedMilliseconds) / 1000.0;
-            //UnityEngine.Debug.Log(currentTime + ": Sent test data in " + elapsed.ToString() + " s");
+            // Log this event
+            stopWatch.Stop();
+            double elapsed = Convert.ToDouble(stopWatch.ElapsedMilliseconds) / 1000.0;
+            UnityEngine.Debug.Log(currentTime + ": Sent test data in " + elapsed.ToString() + " s");
         }
 
-		if (GotTransform) 
+        if (GotTransform) 
 		{
             // Reset the transform boolean
             GotTransform = false;

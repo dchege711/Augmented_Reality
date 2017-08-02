@@ -191,6 +191,7 @@ public class CustomMessages : Singleton<CustomMessages>
         }
     }
 
+    private int count = 0;
     void OnMessageReceived(NetworkConnection connection, NetworkInMessage msg)
     {
         byte messageType = msg.ReadByte();
@@ -203,19 +204,28 @@ public class CustomMessages : Singleton<CustomMessages>
             messageHandler(msg);
         }
 
-        //else {
+        else
+        {
+            if (messageType.ToString() == "185")
+            {
+                // ExperimentalVector3
+                count += 1;
+                if (count % 1000 == 0)
+                {
+                    print("Received a vector3 from " + msg.ReadInt64().ToString());
+                }
+            }
 
-        //    if (messageType.ToString() == "185") {
-        //        // ExperimentalVector3
-        //        print("Received a vector3 from " + msg.ReadInt64().ToString());
-        //    }
+            else if (messageType.ToString() == "186")
+            {
+                // ExperimentalInt
+                count += 1;
+                if (count % 1000 == 0) {
+                    print("Received an int from " + msg.ReadInt64().ToString());
+                }
+            }
 
-        //    else if (messageType.ToString() == "186") {
-        //        // ExperimentalInt
-        //        print("Received an int from " + msg.ReadInt64().ToString());
-        //    }
-
-        // }
+        }
     }
 
     #region HelperFunctionsForWriting
