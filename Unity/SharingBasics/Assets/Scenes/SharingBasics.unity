@@ -167,7 +167,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &491451929
 Transform:
@@ -402,8 +402,8 @@ Light:
   m_Enabled: 1
   serializedVersion: 8
   m_Type: 1
-  m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 1
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Intensity: 0.0001
   m_Range: 10
   m_SpotAngle: 30
   m_CookieSize: 10
@@ -411,7 +411,7 @@ Light:
     m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
-    m_Strength: 1
+    m_Strength: 0.25
     m_Bias: 0.05
     m_NormalBias: 0.4
     m_NearPlane: 0.2
@@ -484,37 +484,37 @@ Prefab:
     - target: {fileID: 114000011545086728, guid: b2db04283121ca74495c2ee000fb4243,
         type: 2}
       propertyPath: InitializingColor.r
-      value: 0.106401384
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114000011545086728, guid: b2db04283121ca74495c2ee000fb4243,
         type: 2}
       propertyPath: InitializingColor.g
-      value: 0.9044118
+      value: 0.6413793
       objectReference: {fileID: 0}
     - target: {fileID: 114000011545086728, guid: b2db04283121ca74495c2ee000fb4243,
         type: 2}
       propertyPath: InitializingColor.b
-      value: 0.9044118
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114000011545086728, guid: b2db04283121ca74495c2ee000fb4243,
         type: 2}
       propertyPath: UploadingColor.r
-      value: 0.61246276
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114000011545086728, guid: b2db04283121ca74495c2ee000fb4243,
         type: 2}
       propertyPath: UploadingColor.g
-      value: 0.59028983
+      value: 0.52934
       objectReference: {fileID: 0}
     - target: {fileID: 114000011545086728, guid: b2db04283121ca74495c2ee000fb4243,
         type: 2}
       propertyPath: UploadingColor.b
-      value: 0.7794118
+      value: 0.7058823
       objectReference: {fileID: 0}
     - target: {fileID: 108000011213487996, guid: b2db04283121ca74495c2ee000fb4243,
         type: 2}
       propertyPath: m_Color.r
-      value: 0.7379308
+      value: 0.663
       objectReference: {fileID: 0}
     - target: {fileID: 108000011213487996, guid: b2db04283121ca74495c2ee000fb4243,
         type: 2}
@@ -525,6 +525,36 @@ Prefab:
         type: 2}
       propertyPath: m_Color.g
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000011545086728, guid: b2db04283121ca74495c2ee000fb4243,
+        type: 2}
+      propertyPath: ImportingOrExportingColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000011545086728, guid: b2db04283121ca74495c2ee000fb4243,
+        type: 2}
+      propertyPath: ImportingOrExportingColor.g
+      value: 0.87
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000011545086728, guid: b2db04283121ca74495c2ee000fb4243,
+        type: 2}
+      propertyPath: ImportingOrExportingColor.b
+      value: 0.16262975
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000011545086728, guid: b2db04283121ca74495c2ee000fb4243,
+        type: 2}
+      propertyPath: DownloadingColor.r
+      value: 0.042874124
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000011545086728, guid: b2db04283121ca74495c2ee000fb4243,
+        type: 2}
+      propertyPath: DownloadingColor.g
+      value: 0.93
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000011545086728, guid: b2db04283121ca74495c2ee000fb4243,
+        type: 2}
+      propertyPath: DownloadingColor.b
+      value: 0.096029006
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b2db04283121ca74495c2ee000fb4243, type: 2}

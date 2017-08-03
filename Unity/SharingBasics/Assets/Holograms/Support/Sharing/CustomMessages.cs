@@ -140,7 +140,7 @@ public class CustomMessages : Singleton<CustomMessages>
         }
     }
 
-    public void SendVector3(Vector3 v) {
+    public bool SendVector3(Vector3 v) {
         // If we are connected to a session, broadcast this vector
         if (this.serverConnection != null && this.serverConnection.IsConnected())
         {
@@ -152,12 +152,15 @@ public class CustomMessages : Singleton<CustomMessages>
             BroadcastThisMessage(msg);
             // Log this event
             // UnityEngine.Debug.Log(getDateTime() + " Sent experimental Vector3");
+            return true;
         }
+        else return false;
     }
 
-    public void SendInt(int myInt) {
+    public bool SendInt(int myInt) {
         // If we're connected to a session, broadcast this integer
-        if (this.serverConnection != null && this.serverConnection.IsConnected()) {
+        if (this.serverConnection != null && this.serverConnection.IsConnected())
+        {
             // Create an outgoing message network tagged as 'experimental data'
             NetworkOutMessage msg = CreateMessage((byte)TestMessageID.ExperimentalInt);
             // Attach the integer to the message
@@ -166,6 +169,10 @@ public class CustomMessages : Singleton<CustomMessages>
             BroadcastThisMessage(msg);
             // Log this event
             // UnityEngine.Debug.Log(getDateTime() + " Sent experimental integer");
+            return true;
+        }
+        else {
+            return false;
         }
     }
 

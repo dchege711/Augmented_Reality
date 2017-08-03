@@ -60,18 +60,27 @@ public class HologramPlacement : Singleton<HologramPlacement>
             stopWatch.Start();
 
             prevDateTime = currentTime;
-            sendTestData();
+            bool result = sendTestData();
 
             // Log this event
             stopWatch.Stop();
             double elapsed = Convert.ToDouble(stopWatch.ElapsedMilliseconds) / 1000.0;
-            UnityEngine.Debug.Log(currentTime + ": Sent test data in " + elapsed.ToString() + " s");
+            if (result)
+            {
+                UnityEngine.Debug.Log(currentTime + ": Sent test data in " + elapsed.ToString() + " s");
+            }
+
+            else {
+                UnityEngine.Debug.Log(currentTime + ": ERROR: Didn't send test data.");
+            }
+
+            UnityEngine.Debug.Log("STATE:" + ImportExportAnchorManager.Instance.CurrentState.ToString());
         }
 
         if (GotTransform) 
 		{
             // Reset the transform boolean
-            GotTransform = false;
+            // GotTransform = false;
 		}
 		else
         {
@@ -92,12 +101,15 @@ public class HologramPlacement : Singleton<HologramPlacement>
     /// <summary>
     /// Sends data to help us measure bandwidth and performance
     /// </summary>
-    private void sendTestData() {
+    private bool sendTestData() {
         Vector3 v = Camera.main.transform.position;
-        // Send 12k ints
+        bool successful = false;
+        // Send 8k vectors
         for (int i = 0; i < 12000; i++) {
-            CustomMessages.Instance.SendInt(i);
+            successful = CustomMessages.Instance.SendInt(i);
+            // successful = CustomMessages.Instance.SendVector3(v);
         }
+        return successful;
     }
 
     public void OnSelect()

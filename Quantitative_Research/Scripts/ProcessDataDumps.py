@@ -23,15 +23,16 @@ data = {
     'noData_data'       : [dataPath + '08-02-10_51_19_Wireshark_noData.csv', '10:51:19'],
     'noData_Chege'      : [dataPath + '08-02-10_51_28_HL_Performance_Chege_noData.txt', '10:51:28'],
     'noData_Maria'      : [dataPath + '08-02-10_51_25_HL_Performance_Maria_noDataa.txt', '10:51:25'],
-    '4kVectors_data'    : [dataPath + '08-01-13_36_13_Wireshark_4kVectors.csv', '13:36:13'],
-    '4kVectors_Chege'   : [dataPath + '08-01-13_36_22_HL_Performance_Chege_4kVectors.txt', '13:36:22'],
-    '4kVectors_Maria'   : [dataPath + '08-01-13_36_25_HL_Performance_Maria_4kVectors.txt', '13:36:25'],
-    '8kVectors_data'    : [dataPath + '08-01-18_10_12_Wireshark_8kVectors.csv', '18:10:12'],
-    '8kVectors_Chege'   : [dataPath + '08-01-18_10_20_HL_Performance_Chege_8kVectors.txt', '18:10:20'],
-    '8kVectors_Maria'   : [dataPath + '08-01-18_10_26_HL_Performance_Maria_8kVectors.txt', '18:10:26'],
-    '12kInts_data'      : [dataPath + '08-02-09_44_42_Wireshark_12kInts.csv', '09:44:42'],
-    '12kInts_Chege'     : [dataPath + '08-02-09_44_55_HL_Performance_Chege_12kInts.txt', '09:44:55'],
-    '12kInts_Maria'     : [dataPath + '08-02-09_44_54_HL_Performance_Maria_12kInts.txt', '09:44:54']
+    '4kVectors_data'    : [dataPath + '08-03-11_45_57_Wireshark_4kVectors.csv', '11:45:57'],
+    '4kVectors_Chege'   : [dataPath + '08-03-11_46_11_HL_Performance_Chege_4kVectors.txt', '11:46:11'],
+    '4kVectors_Maria'   : [dataPath + '08-03-11_46_08_HL_Performance_Maria_4kVectors.txt', '11:46:08'],
+    '8kVectors_data'    : [dataPath + '08-03-12_11_55_Wireshark_8kVectors.csv', '12:11:55'],
+    '8kVectors_Chege'   : [dataPath + '08-03-12_12_01_HL_Performance_Chege_8kVectors.txt', '12:12:01'],
+    '8kVectors_Maria'   : [dataPath + '08-03-12_11_58_HL_Performance_Maria_8kVectors.txt', '12:11:58'],
+    '12kInts_data'      : [dataPath + '08-03-13_09_43_Wireshark_12kInts.csv', '13:09:43'],
+    '12kInts_Chege'     : [dataPath + '08-03-13_09_50_HL_Performance_Chege_12kInts.txt', '13:09:50'],
+    '12kInts_Maria'     : [dataPath + '08-03-13_09_43_HL_Performance_Maria_12kInts.txt', '13:09:43'],
+    'fragments_Maria'   : [dataPath + '08-03-11_03_07_HL_Performance_Maria_Fragments.txt', '11:03:07']
 }
 
 #_______________________________________________________________________________
@@ -345,36 +346,50 @@ def compareDataOnGraph(title, plotData, xyLabels, usesTimeStamps = False):
 
 #_______________________________________________________________________________
 
-def getRange(timeStampsArray):
-    # print(list(range(1, len(timeStampsArray) + 1)))
-    return list(range(0, len(timeStampsArray) + 0))
+def getRange(incomingList):
+    '''
+    Makes an incremental list [0, 1, 2, 3, ...] equal to the length of the
+    list passed along as a parameter.
+    '''
+    return list(range(0, len(incomingList)))
 
-def getCumSum(arrayOfValues):
+def getCumSum(listOfValues):
+    '''
+    Given a list of values, this method returns a list in which the value
+    at index i is the cumulative sum of all values from 0 to i, inclusive.
+    '''
     cumSumArray = []
     cumsum = 0
-    for i in range(len(arrayOfValues)):
-        cumsum += arrayOfValues[i]
+    for i in range(len(listOfValues)):
+        cumsum += listOfValues[i]
         cumSumArray.append(cumsum)
-    # print(cumSumArray)
     return cumSumArray
 
-def queryWiresharkStats(keyName, holoLensName, f = True):
+def queryWiresharkStats(keyName, holoLensName, f = False):
+    '''
+    I was too lazy to re-type the method names each time...
+    '''
     return getWiresharkStats(keyName, data[keyName][0], holoLensName, data[keyName][1], udpFilter = f)
+
+#_______________________________________________________________________________
 
 def main():
     # wiresharkStats ==> hlToLap_timeStamps, hlToLap_packets, lapToHl_timeStamps, lapToHls_packets
     # hlPerfStats ==> timeStamps, cpuLoad, dedicatedMemoryUsed, systemMemoryUsed, engineOne, restOfEngines
     noDataChege = queryWiresharkStats('noData_data', 'Chege')
     noDataMaria = queryWiresharkStats('noData_data', 'Maria')
-    chegeData12kI = queryWiresharkStats('12kInts_data', 'Chege')
-    mariaData12kI = queryWiresharkStats('12kInts_data', 'Maria')
     chegeData4kV = queryWiresharkStats('4kVectors_data', 'Chege')
     mariaData4kV = queryWiresharkStats('4kVectors_data', 'Maria')
     chegeData8kV = queryWiresharkStats('8kVectors_data', 'Chege')
     mariaData8kV = queryWiresharkStats('8kVectors_data', 'Maria')
+    chegeData12kI = queryWiresharkStats('12kInts_data', 'Chege')
+    mariaData12kI = queryWiresharkStats('12kInts_data', 'Maria')
 
     plotData = [
-        (getRange(chegeData12kI[0]), getCumSum(chegeData12kI[1]), "HL to Laptop: All Protocols, 12k ints per sec")
+        (getRange(chegeData12kI[0]), getCumSum(chegeData12kI[1]), "Chege to Laptop : All Protocols, 12k ints per sec"),
+        (getRange(chegeData12kI[2]), getCumSum(chegeData12kI[3]), "Laptop to Chege : All Protocols, 12k ints per sec"),
+        (getRange(mariaData12kI[0]), getCumSum(mariaData12kI[1]), "Maria to Laptop : All Protocols, 12k ints per sec"),
+        (getRange(mariaData12kI[2]), getCumSum(mariaData12kI[3]), "Laptop to Maria : All Protocols, 12k ints per sec")
     ]
     xyLabels = ['Time in Seconds', 'Cumulative Data Transferred in MB']
     # compareDataOnGraph("Comparing General Data to UDP Protocol Data", plotData, xyLabels)
