@@ -35,7 +35,7 @@
 
 ## Findings
 
-![Data_Charts](![Laptop-As-Anchor](https://github.com/dchege711/Augmented_Reality/blob/master/Images/Data_Charts.png)
+![Data_Charts](https://github.com/dchege711/Augmented_Reality/blob/master/Images/Data_Charts.png)
 
 * We aim to answer questions like:
     * Are resources straightforwardly predictable? *e.g. Does sending twice as many Vector3's cost twice as much data?*
