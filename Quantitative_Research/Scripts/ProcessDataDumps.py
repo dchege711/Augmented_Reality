@@ -353,15 +353,16 @@ def getRange(incomingList):
     '''
     return list(range(0, len(incomingList)))
 
-def getCumSum(listOfValues):
+def getCumSum(listOfValues, offset):
     '''
     Given a list of values, this method returns a list in which the value
     at index i is the cumulative sum of all values from 0 to i, inclusive.
+    The offset will be subtracted from each value before summation.
     '''
     cumSumArray = []
     cumsum = 0
     for i in range(len(listOfValues)):
-        cumsum += listOfValues[i]
+        cumsum += listOfValues[i] - offset
         cumSumArray.append(cumsum)
     return cumSumArray
 
@@ -373,29 +374,41 @@ def queryWiresharkStats(keyName, holoLensName, f = False):
 
 #_______________________________________________________________________________
 
-def main():
-    # wiresharkStats ==> hlToLap_timeStamps, hlToLap_packets, lapToHl_timeStamps, lapToHls_packets
+def analyzeDataTransfer():
+    # wiresharkStats ==> hlToLap_timeStamps, hlToLap_MB, lapToHl_timeStamps, lapToHls_MB
     # hlPerfStats ==> timeStamps, cpuLoad, dedicatedMemoryUsed, systemMemoryUsed, engineOne, restOfEngines
+
+    # First measure background data so that we can account for it in the analysis
     noDataChege = queryWiresharkStats('noData_data', 'Chege')
     noDataMaria = queryWiresharkStats('noData_data', 'Maria')
-    chegeData4kV = queryWiresharkStats('4kVectors_data', 'Chege')
-    mariaData4kV = queryWiresharkStats('4kVectors_data', 'Maria')
-    chegeData8kV = queryWiresharkStats('8kVectors_data', 'Chege')
-    mariaData8kV = queryWiresharkStats('8kVectors_data', 'Maria')
-    chegeData12kI = queryWiresharkStats('12kInts_data', 'Chege')
-    mariaData12kI = queryWiresharkStats('12kInts_data', 'Maria')
+    backgroundHLtoLap = (np.mean(noDataChege[1]) + np.mean(noDataMaria[1])) / 2
+    backgroundLaptoHL = (np.mean(noDataChege[1]) + np.mean(noDataMaria[1])) / 2
 
+    # Extract the network data from the Wireshark data dumps
+    chegeData4kV = queryWiresharkStats('4kVectors_data', 'Chege')   # Connected in time
+    mariaData4kV = queryWiresharkStats('4kVectors_data', 'Maria')   # Connected in time
+    chegeData8kV = queryWiresharkStats('8kVectors_data', 'Chege')   # Connected in time
+    mariaData8kV = queryWiresharkStats('8kVectors_data', 'Maria')   # Connected late
+    chegeData12kI = queryWiresharkStats('12kInts_data', 'Chege')    # Connected in time
+    mariaData12kI = queryWiresharkStats('12kInts_data', 'Maria')    # Connected late
+
+    # Plot how data each hololens sends to the laptop (server)
     plotData = [
-        (getRange(chegeData12kI[0]), getCumSum(chegeData12kI[1]), "Chege to Laptop : All Protocols, 12k ints per sec"),
-        (getRange(chegeData12kI[2]), getCumSum(chegeData12kI[3]), "Laptop to Chege : All Protocols, 12k ints per sec"),
-        (getRange(mariaData12kI[0]), getCumSum(mariaData12kI[1]), "Maria to Laptop : All Protocols, 12k ints per sec"),
-        (getRange(mariaData12kI[2]), getCumSum(mariaData12kI[3]), "Laptop to Maria : All Protocols, 12k ints per sec")
+        ( getRange(chegeData4kV[0]),
+          getCumSum(chegeData4kV[1], backgroundHLtoLap),
+          "4,000 vector3's per sec" ),
+        ( getRange(chegeData8kV[0]),
+          getCumSum(chegeData8kV[1], backgroundHLtoLap),
+          "8,000 vector3's per sec" ),
+        ( getRange(chegeData12kI[0]),
+          getCumSum(chegeData12kI[1], backgroundHLtoLap),
+          "12,000 ints per sec" )
     ]
-    xyLabels = ['Time in Seconds', 'Cumulative Data Transferred in MB']
-    # compareDataOnGraph("Comparing General Data to UDP Protocol Data", plotData, xyLabels)
+    xyLabels = ['Time in Seconds', 'Data Transferred from HoloLens to Laptop in MBs']
+    compareDataOnGraph("Comparing Data Usage by Different Payloads", plotData, xyLabels)
 
 #_______________________________________________________________________________
 
 if __name__ == "__main__":
-    main()
+    analyzeDataTransfer()
 #_______________________________________________________________________________
