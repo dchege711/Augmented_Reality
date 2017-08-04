@@ -1,5 +1,6 @@
 * This folder explores previous and current works in the AR field.
-    * [2016, Azuma Ronald. The Most Important Challenge facing AR](#takeaways-from-2016-azuma-ronald-the-most-important-challenge-facing-AR)
+    * [1997, Azuma Ronald. A Survey of Augmented Reality](#takeaways-from-1997-azuma-ronald-a-survey-of-augmented-reality)
+    * [2016, Azuma Ronald. The Most Important Challenge facing AR](#takeaways-from-2016-azuma-ronald-the-most-important-challenge-facing-ar)
 
 ## Takeaways from 1997, Azuma Ronald: [A Survey of Augmented Reality](https://www.cs.unc.edu/~azuma/ARpresence.pdf)
 * *"While the CGI effects in movies interact with the real world (e.g. actors), the movie is not an interactive media [and thus not AR]."*
