@@ -1,7 +1,6 @@
 * This folder explores previous and current works in the AR field.
-    * [1997, Azuma Ronald. A Survey of Augmented Reality](#takeaways-from-1997-,-azuma-ronald:-a-survey-of-augmented-reality)
-    * [2016, Azuma Ronald. The Most Important Challenge facing AR](#takeaways-from-2016-,-azuma-ronald:-the-most-important-challenge-facing-AR)
-    * [Accessing my Dummy Tag](#dummytag)
+    * [1997, Azuma Ronald. A Survey of Augmented Reality](#takeaways-from-1997-azuma-ronald-a-survey-of-augmented-reality)
+    * [2016, Azuma Ronald. The Most Important Challenge facing AR](#takeaways-from-2016-azuma-ronald-the-most-important-challenge-facing-AR)
 
 ## Takeaways from 1997, Azuma Ronald: [A Survey of Augmented Reality](https://www.cs.unc.edu/~azuma/ARpresence.pdf)
 * *"While the CGI effects in movies interact with the real world (e.g. actors), the movie is not an interactive media [and thus not AR]."*
@@ -36,5 +35,3 @@
     * Reinforcing. Make inherently important locations even more poignant, e.g. [110 Stories](http://www.110stories.com/)
     * Reskinning. Reinterpret otherwise normal environments, e.g. [Belief Circles in Rainbows End](https://en.wikipedia.org/wiki/Rainbows_End#Belief_circles), virtual gyms in Pokémon GO.
     * Remembering. Setting virtual time machines for personally significant events, e.g. [The Holoportation Project](https://www.microsoft.com/en-us/research/project/holoportation-3/), recreating your child's first steps at the exact spot.
-    
-# DummyTag
