@@ -15,15 +15,27 @@
 	* Continental's HUD: Drivers can see warning signals, dashboard info & navigation arrows without taking eyes off the road.
 * A more detailed list of companies in the AR space can be found [here](https://blog.tracxn.com/2017/01/13/tracxn-analyst-notes-862-augmented-reality/)
 
-### Sample Use Cases
+### Sample AR Use Cases
 
-* Video Games: Possibly the first consumer market to develop since gamers are awaiting the tech.
-* Retail: HoloLens to configure Volvos in dealerships; trying clothes without actually wearing them.
-* Real Estate: Designing home spaces when buying a house.
-* HealthCare: Projecting CT scans and MRIs to field of vision; scanning bar codes to get medical info.
-* Education: Medical Schools experimenting with AR. If only normal schools weren't strapped for cash.
-* Automotive: Head-up Displays (HUDs), e.g. directions and safety measures.
-* Engineering: Designing a product directly into the environment that it will be placed into.
+* Video Games:
+	* Possibly the first consumer market to develop since gamers are usually early-adopters.
+* Retail:
+	* Volvo is using the HoloLens to configure Volvos in dealerships
+	* Trying clothes without actually wearing them.
+* Real Estate:
+	* Designing home spaces when buying a house.
+* HealthCare:
+	* Projecting CT scans and MRIs to field of vision; scanning bar codes to get medical info.
+	* Increasing precision, e.g. where to drill a hole into the skull.
+	* Virtual instructions for novice patients. (*Side Note: Are we assuming that gaining mastery isn't necessary, or are there vast improvements to be made by doing this?*)
+* Automotive:
+	* Head-up Displays (HUDs), e.g. directions and safety measures, navigating poorly lit places.   
+* Manufacturing and Repair:
+    * AR could move manuals from text to superimposed holograms.
+    * Boeing looking into AR to guide technicians in wiring. They currently use layout boards that are stored in several warehouses. (*Side Note: Did Boeing succeed?*)
+* Annotation and Visualization:
+    * It's about displaying information Just-In-Time, e.g. contents of library shelves.
+    * Visualizations, e.g. proposed building, seeing objects in the night sky.
 
 ------
 

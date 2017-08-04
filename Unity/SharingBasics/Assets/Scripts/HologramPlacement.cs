@@ -114,8 +114,8 @@ public class HologramPlacement : Singleton<HologramPlacement>
 
     public void OnSelect()
     {
-        // Note that we have a transform.
-        GotTransform = true;
+        // Toggle the GotTransform variable
+        GotTransform = !GotTransform;
 		// And send this transform to our friends in the session
 		CustomMessages.Instance.SendStageTransform(transform.localPosition, transform.localRotation);
     }
@@ -137,7 +137,7 @@ public class HologramPlacement : Singleton<HologramPlacement>
 		GotTransform = true;
 	}
 
-    // I'm not so sure how these are getting called...
+    // I'm not so sure how these are getting called... Update: They're not :-(
 
     // Helper method for receiving vector3's
     public void OnExperimentalVector3(NetworkInMessage msg) {
