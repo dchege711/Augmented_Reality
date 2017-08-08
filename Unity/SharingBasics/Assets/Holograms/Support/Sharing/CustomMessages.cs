@@ -215,7 +215,7 @@ public class CustomMessages : Singleton<CustomMessages>
                 if (count % 1000 == 0)
                 {
                     long senderID = msg.ReadInt64(); // Needed to be read first
-                    long latency = ReadLatencyInMs(msg);
+                    double latency = ReadLatencyInMs(msg);
                     // UnityEngine.Debug.Log("Received a vector3 from " + msg.ReadInt64().ToString());
                     UnityEngine.Debug.Log("Vector3 Latency: " + latency.ToString());
                 }
@@ -227,7 +227,7 @@ public class CustomMessages : Singleton<CustomMessages>
                 count += 1;
                 if (count % 1000 == 0) {
                     long senderID = msg.ReadInt64(); // Needed to be read first
-                    long latency = ReadLatencyInMs(msg);
+                    double latency = ReadLatencyInMs(msg);
                     // UnityEngine.Debug.Log("Received an int from " + msg.ReadInt64().ToString());
                     UnityEngine.Debug.Log("Int Latency: " + latency.ToString());
                 }
@@ -279,11 +279,13 @@ public class CustomMessages : Singleton<CustomMessages>
         return new Quaternion(msg.ReadFloat(), msg.ReadFloat(), msg.ReadFloat(), msg.ReadFloat());
     }
 
-    public long ReadLatencyInMs(NetworkInMessage msg) {
-        long currentTimeStamp = (DateTime.Now).ToBinary();
-        long msgTimeStamp = msg.ReadInt64();
+    public double ReadLatencyInMs(NetworkInMessage msg) {
+        DateTime currentTimeStamp = DateTime.Now;
+        DateTime msgTimeStamp = DateTime.FromBinary(msg.ReadInt64());
         // The time stamps are in 100-ns units. We need them in ms, thus x 100 and then / 1,000,000
-        long latency = (currentTimeStamp - msgTimeStamp) * (10000);
+        double latency = currentTimeStamp.Subtract(msgTimeStamp).TotalMilliseconds;
+        // double latency = (currentTimeStamp - msgTimeStamp) * (1 / 10000);
+        // -8,586,993,819,017,882,727 - -8,586,993,819,201,586,872 = 1,837,041,450,000
         UnityEngine.Debug.Log(currentTimeStamp + " - " + msgTimeStamp + " = " + latency);
         return latency;
     }

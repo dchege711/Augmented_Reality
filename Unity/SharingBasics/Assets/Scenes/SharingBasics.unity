@@ -293,6 +293,11 @@ Prefab:
       propertyPath: IsAudioEndpoint
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114000012667812730, guid: 8aaf37823b26ee449bb3b3d7775965c3,
+        type: 2}
+      propertyPath: AutoDiscoverServer
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8aaf37823b26ee449bb3b3d7775965c3, type: 2}
   m_IsPrefabParent: 0
