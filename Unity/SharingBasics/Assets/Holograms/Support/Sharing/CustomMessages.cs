@@ -285,7 +285,6 @@ public class CustomMessages : Singleton<CustomMessages>
         // The time stamps are in 100-ns units. We need them in ms, thus x 100 and then / 1,000,000
         double latency = currentTimeStamp.Subtract(msgTimeStamp).TotalMilliseconds;
         // double latency = (currentTimeStamp - msgTimeStamp) * (1 / 10000);
-        // -8,586,993,819,017,882,727 - -8,586,993,819,201,586,872 = 1,837,041,450,000
         UnityEngine.Debug.Log(currentTimeStamp + " - " + msgTimeStamp + " = " + latency);
         return latency;
     }
