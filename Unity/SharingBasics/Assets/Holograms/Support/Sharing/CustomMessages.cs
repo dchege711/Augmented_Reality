@@ -214,6 +214,7 @@ public class CustomMessages : Singleton<CustomMessages>
                 count += 1;
                 if (count % 1000 == 0)
                 {
+                    long senderID = msg.ReadInt64(); // Needed to be read first
                     long latency = ReadLatencyInMs(msg);
                     // UnityEngine.Debug.Log("Received a vector3 from " + msg.ReadInt64().ToString());
                     UnityEngine.Debug.Log("Vector3 Latency: " + latency.ToString());
@@ -225,6 +226,7 @@ public class CustomMessages : Singleton<CustomMessages>
                 // ExperimentalInt
                 count += 1;
                 if (count % 1000 == 0) {
+                    long senderID = msg.ReadInt64(); // Needed to be read first
                     long latency = ReadLatencyInMs(msg);
                     // UnityEngine.Debug.Log("Received an int from " + msg.ReadInt64().ToString());
                     UnityEngine.Debug.Log("Int Latency: " + latency.ToString());
@@ -282,6 +284,7 @@ public class CustomMessages : Singleton<CustomMessages>
         long msgTimeStamp = msg.ReadInt64();
         // The time stamps are in 100-ns units. We need them in ms, thus x 100 and then / 1,000,000
         long latency = (currentTimeStamp - msgTimeStamp) * (10000);
+        UnityEngine.Debug.Log(currentTimeStamp + " - " + msgTimeStamp + " = " + latency);
         return latency;
     }
 

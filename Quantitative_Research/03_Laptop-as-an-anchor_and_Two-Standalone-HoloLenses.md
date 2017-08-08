@@ -4,7 +4,6 @@
 
 ![Laptop-As-Anchor](https://github.com/dchege711/Augmented_Reality/blob/master/Images/Laptop_as_Anchor.png)
 
-## Data Types Available
 * Unity apps written in C# have the following data types at their disposal:
     * **int**
         * *e.g. 5 (4 bytes)*
@@ -20,12 +19,10 @@
     * **Quaternion**
         * *e.g. (4, 46, -4.21, -984) (4 floats --> 16 bytes)*
         * Used by Unity to represent rotations of game objects (in our case, holograms).
-
-## Notes On the Experiments
 * In our experiments, we used ints and vector3's, under the assumption that our findings can be generalized to the other data types.
-* The HoloToolkit Sharing utility was rather finicky with the university Wi-Fi. The connection time between the HoloLenses wasn't very predictable. Sometimes one HoloLens would be kept waiting longer than the other.
-* I considered the connected HoloLens as representative of what the other one would have sent. Spending more time synchronizing this would yield little results since the amount of data sent gives us a ceiling to work with.
-* For example, 4kVectors shows a case in which both HoloLenses connected successfully with each other over the Sharing utility, while 8kVectors shows when only one HoloLens made the successful connection from the beginning of the experiment.
+* The HoloToolkit Sharing utility was rather finicky with the university WiFi. The connection time between the HoloLenses wasn't very predictable. Sometimes one HoloLens would be kept waiting longer than the other.
+* Due to time constraints, we considered the connected HoloLens as representative of what the other one would have sent.
+* For example, 4kVectors shows a case in which both HoloLenses connected successfully with each other over the Sharing utility.
 ```shell
 4kVectors_data    Chege    Sent :  44.73 MB (259 sec)   Received :  11.97 MB (274 sec)
 4kVectors_data    Maria    Sent :  51.34 MB (246 sec)   Received :  13.14 MB (261 sec)
@@ -33,9 +30,6 @@
 8kVectors_data    Maria    Sent :  27.11 MB (120 sec)   Received :   0.06 MB (120 sec)
 ```
 
-## Findings
-
-![Data_Charts](https://github.com/dchege711/Augmented_Reality/blob/master/Images/Data_Charts.png)
 
 * We aim to answer questions like:
     * Are resources straightforwardly predictable? *e.g. Does sending twice as many Vector3's cost twice as much data?*
@@ -44,3 +38,10 @@
 * Questions to keep in mind for later:
     * What are the limitations?
     * Can we transfer more complex structures, like 3D objects, instead of mandating that every HoloLens have its copy of the object?
+
+* The data being broadcasted was varied across different runs of the experiment:
+    * 10 Vector3's every second, each Vector3 being sent separately.
+    * 30 ints every second, each int being sent separately.
+    * 20 Vector3's every second, each Vector3 being sent separately.
+
+* Unity uses the UDP protocol to send messages, so we also filtered based on that.

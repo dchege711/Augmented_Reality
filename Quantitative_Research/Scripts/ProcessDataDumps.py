@@ -300,7 +300,7 @@ def getHLPerformanceStats(hlConsoleDump, firstTimeStamp):
                 restOfEnginesSum += float(items[5][1])
 
     print("Successfully extracted", str(len(timeStamps)), "seconds of hololens data")
-    return (timeStamps, cpuLoad, dedicatedMemoryUsed, systemMemoryUsed, engineOne, restOfEngines)
+    return timeStamps, cpuLoad, dedicatedMemoryUsed, systemMemoryUsed, engineOne, restOfEngines
 
 #_______________________________________________________________________________
 
@@ -336,8 +336,7 @@ def compareDataOnGraph(title, plotData, xyLabels, usesTimeStamps = False):
                            fmt = formatSrings[index % len(formatSrings)],
                            label = dataset[2])
         else:
-            plt.plot( np.array(dataset[0]),
-                      np.array(dataset[1]),
+            plt.plot( dataset[0], dataset[1],
                       color = formatSrings[index % len(formatSrings)],
                       label = dataset[2])
         index += 1
@@ -354,95 +353,49 @@ def getRange(incomingList):
     '''
     return list(range(0, len(incomingList)))
 
-def getCumSum(listOfValues, offset):
+def getCumSum(listOfValues):
     '''
     Given a list of values, this method returns a list in which the value
     at index i is the cumulative sum of all values from 0 to i, inclusive.
-    The offset will be subtracted from each value before summation.
     '''
     cumSumArray = []
     cumsum = 0
     for i in range(len(listOfValues)):
-        cumsum += listOfValues[i] - offset
+        cumsum += listOfValues[i]
         cumSumArray.append(cumsum)
     return cumSumArray
 
-#_______________________________________________________________________________
-
-def queryWiresharkStats(keyName, holoLensName, f = False):
+def queryWiresharkStats(keyName, holoLensName, f = True):
     '''
     I was too lazy to re-type the method names each time...
     '''
     return getWiresharkStats(keyName, data[keyName][0], holoLensName, data[keyName][1], udpFilter = f)
 
-def analyzeDataTransfer():
-    # wiresharkStats ==> hlToLap_timeStamps, hlToLap_MB, lapToHl_timeStamps, lapToHls_MB
+#_______________________________________________________________________________
 
-    # First measure background data so that we can account for it in the analysis
+def main():
+    # wiresharkStats ==> hlToLap_timeStamps, hlToLap_packets, lapToHl_timeStamps, lapToHls_packets
+    # hlPerfStats ==> timeStamps, cpuLoad, dedicatedMemoryUsed, systemMemoryUsed, engineOne, restOfEngines
     noDataChege = queryWiresharkStats('noData_data', 'Chege')
     noDataMaria = queryWiresharkStats('noData_data', 'Maria')
-    backgroundHLtoLap = (np.mean(noDataChege[1]) + np.mean(noDataMaria[1])) / 2
-    backgroundLaptoHL = (np.mean(noDataChege[1]) + np.mean(noDataMaria[1])) / 2
+    chegeData4kV = queryWiresharkStats('4kVectors_data', 'Chege')
+    mariaData4kV = queryWiresharkStats('4kVectors_data', 'Maria')
+    chegeData8kV = queryWiresharkStats('8kVectors_data', 'Chege')
+    mariaData8kV = queryWiresharkStats('8kVectors_data', 'Maria')
+    chegeData12kI = queryWiresharkStats('12kInts_data', 'Chege')
+    mariaData12kI = queryWiresharkStats('12kInts_data', 'Maria')
 
-    # Extract the network data from the Wireshark data dumps
-    chegeData4kV = queryWiresharkStats('4kVectors_data', 'Chege')   # Connected in time
-    mariaData4kV = queryWiresharkStats('4kVectors_data', 'Maria')   # Connected in time
-    chegeData8kV = queryWiresharkStats('8kVectors_data', 'Chege')   # Connected in time
-    mariaData8kV = queryWiresharkStats('8kVectors_data', 'Maria')   # Connected late
-    chegeData12kI = queryWiresharkStats('12kInts_data', 'Chege')    # Connected in time
-    mariaData12kI = queryWiresharkStats('12kInts_data', 'Maria')    # Connected late
-
-    # Plot how data each hololens sends to the laptop (server)
     plotData = [
-        ( getRange(chegeData4kV[0]),
-          getCumSum(chegeData4kV[1], backgroundHLtoLap),
-          "4,000 vector3's per sec" ),
-        ( getRange(chegeData8kV[0]),
-          getCumSum(chegeData8kV[1], backgroundHLtoLap),
-          "8,000 vector3's per sec" ),
-        ( getRange(chegeData12kI[0]),
-          getCumSum(chegeData12kI[1], backgroundHLtoLap),
-          "12,000 ints per sec" )
+        (getRange(chegeData12kI[0]), getCumSum(chegeData12kI[1]), "Chege to Laptop : All Protocols, 12k ints per sec"),
+        (getRange(chegeData12kI[2]), getCumSum(chegeData12kI[3]), "Laptop to Chege : All Protocols, 12k ints per sec"),
+        (getRange(mariaData12kI[0]), getCumSum(mariaData12kI[1]), "Maria to Laptop : All Protocols, 12k ints per sec"),
+        (getRange(mariaData12kI[2]), getCumSum(mariaData12kI[3]), "Laptop to Maria : All Protocols, 12k ints per sec")
     ]
-    # print("DATA: ", mariaData12kI[1])
-    xyLabels = ['Time in Seconds', 'Data Transferred from HoloLens to Laptop in MBs']
-    # compareDataOnGraph("Comparing Data Usage by Different Payloads", plotData, xyLabels)
+    xyLabels = ['Time in Seconds', 'Cumulative Data Transferred in MB']
+    # compareDataOnGraph("Comparing General Data to UDP Protocol Data", plotData, xyLabels)
 
 #_______________________________________________________________________________
 
-def queryPerformance(keyName):
-    return getHLPerformanceStats(data[keyName][0], data[keyName][1])
-
-def analyzePerformance():
-    # hlPerfStats ==> timeStamps, cpuLoad, dedicatedMemoryUsed, systemMemoryUsed, engineOne, restOfEngines
-
-    # Extract the data from the dumps
-    fragments = queryPerformance('fragments_Maria')
-    chege4kV = queryPerformance('4kVectors_Chege')
-    chege8kV = queryPerformance('8kVectors_Chege')
-    chege12kI = queryPerformance('12kInts_Chege')
-    # print("PERFORMANCE: ", chege12kI[1])
-
-    # Graph the results
-    timeFragments = getRange(fragments[0])
-    timeChege4kV = getRange(chege4kV)
-    timeChege8kV = getRange(chege8kV)
-    timeChege12kI = getRange(chege12kI)
-    titles = ['None', 'CPU Load', 'Dedicated Memory Used', 'System Memory Used', 'Engine One', 'Rest of Engines']
-    xyLabels = ['Time in Seconds', 'Arbitrary Units']
-    i = 1
-    while (i <= 5):
-        plotData = [
-            (timeFragments, fragments[i], "Fragments App"),
-            (timeChege4kV, chege4kV[i], "4,000 vectors per sec"),
-            (timeChege8kV, chege8kV[i], "8,000 vectors per sec"),
-            (timeChege12kI, chege12kI[i], "12,000 ints per sec")
-        ]
-        # compareDataOnGraph(titles[i], plotData, xyLabels)
-        print(str(i), ":", len(timeFragments), len(fragments[i]))
-        i += 1
-
 if __name__ == "__main__":
-    # analyzeDataTransfer()
-    analyzePerformance()
+    main()
 #_______________________________________________________________________________
