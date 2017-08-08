@@ -65,16 +65,13 @@ public class HologramPlacement : Singleton<HologramPlacement>
             // Log this event
             stopWatch.Stop();
             double elapsed = Convert.ToDouble(stopWatch.ElapsedMilliseconds) / 1000.0;
-            if (result)
-            {
+            if (result) {
                 UnityEngine.Debug.Log(currentTime + ": Sent test data in " + elapsed.ToString() + " s");
-            }
-
-            else {
+            } else {
                 UnityEngine.Debug.Log(currentTime + ": ERROR: Didn't send test data.");
             }
 
-            UnityEngine.Debug.Log("STATE:" + ImportExportAnchorManager.Instance.CurrentState.ToString());
+            // UnityEngine.Debug.Log("STATE:" + ImportExportAnchorManager.Instance.CurrentState.ToString());
         }
 
         if (GotTransform) 
@@ -102,9 +99,8 @@ public class HologramPlacement : Singleton<HologramPlacement>
     /// Sends data to help us measure bandwidth and performance
     /// </summary>
     private bool sendTestData() {
-        Vector3 v = Camera.main.transform.position;
+        // Vector3 v = Camera.main.transform.position;
         bool successful = false;
-        // Send 8k vectors
         for (int i = 0; i < 12000; i++) {
             successful = CustomMessages.Instance.SendInt(i);
             // successful = CustomMessages.Instance.SendVector3(v);
@@ -143,7 +139,7 @@ public class HologramPlacement : Singleton<HologramPlacement>
     public void OnExperimentalVector3(NetworkInMessage msg) {
         long senderID = msg.ReadInt64();
         Vector3 v = CustomMessages.Instance.ReadVector3(msg);
-        // UnityEngine.Debug.Log(senderID.ToString() + " sent us a vector3 : " + v.ToString());
+        UnityEngine.Debug.Log(senderID.ToString() + " sent us a vector3 : " + v.ToString());
     }
 
     // Helper method for receiving ints
@@ -151,7 +147,7 @@ public class HologramPlacement : Singleton<HologramPlacement>
     {
         long senderID = msg.ReadInt64();
         int sentInt = msg.ReadInt32();
-        // UnityEngine.Debug.Log(senderID.ToString() + " sent us an int : " + sentInt.ToString());
+        UnityEngine.Debug.Log(senderID.ToString() + " sent us an int : " + sentInt.ToString());
     }
 
     public void ResetStage()

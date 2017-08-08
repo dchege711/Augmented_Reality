@@ -52,10 +52,6 @@ public class CustomMessages : Singleton<CustomMessages>
     NetworkConnectionAdapter connectionAdapter;
 
     /// <summary>
-    /// Useful for timing so that I can approximate the upper limit of the number of broadcasts per second
-    /// </summary>
-
-    /// <summary>
     /// Cache the connection object for the sharing service
     /// </summary>
     NetworkConnection serverConnection;
@@ -144,12 +140,11 @@ public class CustomMessages : Singleton<CustomMessages>
         // If we are connected to a session, broadcast this vector
         if (this.serverConnection != null && this.serverConnection.IsConnected())
         {
-            // Create an outgoing network message tagged as 'experimental data'
             NetworkOutMessage msg = CreateMessage((byte)TestMessageID.ExperimentalVector3);
-            // Attach the vector to the message
+            AppendTimeStamp(msg);
             AppendVector3(msg, v);
-            // Broadcast this to the network
             BroadcastThisMessage(msg);
+
             // Log this event
             // UnityEngine.Debug.Log(getDateTime() + " Sent experimental Vector3");
             return true;
@@ -161,12 +156,11 @@ public class CustomMessages : Singleton<CustomMessages>
         // If we're connected to a session, broadcast this integer
         if (this.serverConnection != null && this.serverConnection.IsConnected())
         {
-            // Create an outgoing message network tagged as 'experimental data'
             NetworkOutMessage msg = CreateMessage((byte)TestMessageID.ExperimentalInt);
-            // Attach the integer to the message
+            AppendTimeStamp(msg);
             msg.Write(myInt);
-            // Broadcast this to the network
             BroadcastThisMessage(msg);
+
             // Log this event
             // UnityEngine.Debug.Log(getDateTime() + " Sent experimental integer");
             return true;
@@ -216,10 +210,13 @@ public class CustomMessages : Singleton<CustomMessages>
             if (messageType.ToString() == "185")
             {
                 // ExperimentalVector3
+
                 count += 1;
                 if (count % 1000 == 0)
                 {
-                    UnityEngine.Debug.Log("Received a vector3 from " + msg.ReadInt64().ToString());
+                    long latency = ReadLatencyInMs(msg);
+                    // UnityEngine.Debug.Log("Received a vector3 from " + msg.ReadInt64().ToString());
+                    UnityEngine.Debug.Log("Vector3 Latency: " + latency.ToString());
                 }
             }
 
@@ -228,7 +225,9 @@ public class CustomMessages : Singleton<CustomMessages>
                 // ExperimentalInt
                 count += 1;
                 if (count % 1000 == 0) {
-                    UnityEngine.Debug.Log("Received an int from " + msg.ReadInt64().ToString());
+                    long latency = ReadLatencyInMs(msg);
+                    // UnityEngine.Debug.Log("Received an int from " + msg.ReadInt64().ToString());
+                    UnityEngine.Debug.Log("Int Latency: " + latency.ToString());
                 }
             }
 
@@ -256,7 +255,13 @@ public class CustomMessages : Singleton<CustomMessages>
         msg.Write(rotation.y);
         msg.Write(rotation.z);
         msg.Write(rotation.w);
-    }	
+    }
+
+    void AppendTimeStamp(NetworkOutMessage msg) {
+        DateTime currentTime = System.DateTime.Now;
+        long timeAsLong = currentTime.ToBinary();
+        msg.Write(timeAsLong);
+    }
 
     #endregion HelperFunctionsForWriting
 
@@ -270,6 +275,14 @@ public class CustomMessages : Singleton<CustomMessages>
     public Quaternion ReadQuaternion(NetworkInMessage msg)
     {
         return new Quaternion(msg.ReadFloat(), msg.ReadFloat(), msg.ReadFloat(), msg.ReadFloat());
+    }
+
+    public long ReadLatencyInMs(NetworkInMessage msg) {
+        long currentTimeStamp = (DateTime.Now).ToBinary();
+        long msgTimeStamp = msg.ReadInt64();
+        // The time stamps are in 100-ns units. We need them in ms, thus x 100 and then / 1,000,000
+        long latency = (currentTimeStamp - msgTimeStamp) * (10000);
+        return latency;
     }
 
     #endregion HelperFunctionsForReading
