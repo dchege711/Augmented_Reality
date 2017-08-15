@@ -26,6 +26,8 @@
         * *e.g. (4, 46, -4.21, -984) (4 floats --> 16 bytes)*
         * Used by Unity to represent rotations of game objects (in our case, holograms).
 
+* The amount of data sent can be reduced by aggregating (with a tradeoff in the AR quality of service, e.g. update rates) since data is padded before being sent. Therefore, sending 30,000 ints will use more data than sending 10,000 vector3's.
+
 ## Protocols Used by the HoloLens
 * Tristan Braud's 2017 paper, ['Future Networking Challenges: The Case of Mobile AR'](https://github.com/dchege711/Augmented_Reality/blob/master/Related_Work/2017_Tristan_Braud_Future_Networking_Challenges.md) proposes a need for a protocol designed for AR, lest AR applications prove unsustainable under the current (and projected) infrastructure.
 * We thus wanted to know what protocol is used by the HoloLens, and this is what we found:
