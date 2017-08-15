@@ -22,7 +22,7 @@ dataPath = 'C:/Users/dchege711/Documents/Augmented_Reality/Quantitative_Research
 data = {
     'noData_data'       : [dataPath + '08-02-10_51_19_Wireshark_noData.csv', '10:51:19'],
     'noData_Chege'      : [dataPath + '08-02-10_51_28_HL_Performance_Chege_noData.txt', '10:51:28'],
-    'noData_Maria'      : [dataPath + '08-02-10_51_25_HL_Performance_Maria_noDataa.txt', '10:51:25'],
+    'noData_Maria'      : [dataPath + '08-02-10_51_25_HL_Performance_Maria_noData.txt', '10:51:25'],
     '4kVectors_data'    : [dataPath + '08-03-11_45_57_Wireshark_4kVectors.csv', '11:45:57'],
     '4kVectors_Chege'   : [dataPath + '08-03-11_46_11_HL_Performance_Chege_4kVectors.txt', '11:46:11'],
     '4kVectors_Maria'   : [dataPath + '08-03-11_46_08_HL_Performance_Maria_4kVectors.txt', '11:46:08'],
@@ -34,6 +34,8 @@ data = {
     '12kInts_Maria'     : [dataPath + '08-03-13_09_43_HL_Performance_Maria_12kInts.txt', '13:09:43'],
     'fragments_Maria'   : [dataPath + '08-03-11_03_07_HL_Performance_Maria_Fragments.txt', '11:03:07']
 }
+
+bytesInKB = 1024.0
 
 #_______________________________________________________________________________
 
@@ -94,8 +96,8 @@ def getWDPStats(wdpDump):
                 # Append the total and reset sum if we've moved to a new sec
                 else:
                     holoLensToLaptop_timeStamps.append(prevTimeStampSent)
-                    holoLensToLaptop_MB.append(runningDataSumSent / (1024 * 1024))
-                    sent += runningDataSumSent / (1024 * 1024)
+                    holoLensToLaptop_MB.append(runningDataSumSent / (bytesInKB * bytesInKB))
+                    sent += runningDataSumSent / (bytesInKB * bytesInKB)
                     prevTimeStampSent = timeStamp
                     runningDataSumSent = currentBytes
 
@@ -107,8 +109,8 @@ def getWDPStats(wdpDump):
                 # Append the total and reset sum if we've moved to a new sec
                 else:
                     laptopToHoloLens_timeStamps.append(prevTimeStampReceived)
-                    laptopToHoloLens_MB.append(runningDataSumReceived / (1024 * 1024))
-                    received += runningDataSumReceived / (1024 * 1024)
+                    laptopToHoloLens_MB.append(runningDataSumReceived / (bytesInKB * bytesInKB))
+                    received += runningDataSumReceived / (bytesInKB * bytesInKB)
                     prevTimeStampReceived = timeStamp
                     runningDataSumReceived = currentBytes
 
@@ -125,7 +127,7 @@ def getWDPStats(wdpDump):
 
 #_______________________________________________________________________________
 
-def getWiresharkStats(label, wiresharkDump, holoLensName, startingTimeStamp, udpFilter = False):
+def getWiresharkStats(label, wiresharkDump, holoLensName, startingTimeStamp):
     '''
     Returns 4 lists:
         holoLensToLaptop_timeStamps
@@ -153,8 +155,10 @@ def getWiresharkStats(label, wiresharkDump, holoLensName, startingTimeStamp, udp
 
     holoLensToLaptop_timeStamps = []
     holoLensToLaptop_MB = []
+    holoLensToLaptop_Protocols = {}
     laptopToHoloLens_timeStamps = []
     laptopToHoloLens_MB = []
+    laptopToHoloLens_Protocols = {}
 
     sent = 0
     received = 0
@@ -166,7 +170,11 @@ def getWiresharkStats(label, wiresharkDump, holoLensName, startingTimeStamp, udp
         prevTimeStampSent = startingTimeStamp
         prevTimeStampReceived = startingTimeStamp
         runningDataSumSent = 0
+        runningProtocolSumSent = {}
         runningDataSumReceived = 0
+        runningProtocolSumRecvd = {}
+
+        # Indexes of the data that we get from Wireshark
         TIME = 1
         SOURCE = 2
         DESTINATION = 3
@@ -176,46 +184,78 @@ def getWiresharkStats(label, wiresharkDump, holoLensName, startingTimeStamp, udp
         for line in myData:
             line = line.replace('"', '')    # Urgh, why did Wireshark do this?
             items = line.split(",")
-            timeStamp = items[TIME].split('.')[0].split()[1]
+            timeStamp = items[TIME].split('.')[0].split()[1] # Get time only up to the seconds
             numOfBytes = int(items[LENGTH])
 
-            # If specified, filter on the UDP protocol
-            # System data uses TCP, but game data is sent over UDP
-            if udpFilter:
-                countThisItem = items[PROTOCOL] == 'UDP'
-            else:
-                countThisItem = True
-
-            if items[SOURCE] == holoLensIPv4 and countThisItem:
+            if items[SOURCE] == holoLensIPv4:
+                # Keep track of the data count.
                 sent += numOfBytes
+                protocol = items[PROTOCOL]
+
+                # Create timeStamp and data slots if it's a newly observed protocol
+                if protocol not in holoLensToLaptop_Protocols:
+                    holoLensToLaptop_Protocols[protocol] = ([], [])
+                    runningProtocolSumSent[protocol] = 0
+
+                # If we're still within the same second, aggregate the data
                 if timeStamp == prevTimeStampSent:
                     runningDataSumSent += numOfBytes
-                    # print(str(packets), end = " + ")
+                    runningProtocolSumSent[protocol] += numOfBytes
+
+                # Otherwise, save the aggregated data for the last elapsed second
                 else:
                     holoLensToLaptop_timeStamps.append(prevTimeStampSent)
-                    holoLensToLaptop_MB.append(runningDataSumSent / (1024 * 1024.0))
-                    # print(prevTimeStampSent, str(runningDataSumSent))
+                    holoLensToLaptop_MB.append(runningDataSumSent / (bytesInKB * bytesInKB))
+
+                    # Note down all the sums of the data sent per protocol and reset count
+                    for protocol in holoLensToLaptop_Protocols:
+                        holoLensToLaptop_Protocols[protocol][0].append(prevTimeStampSent)
+                        holoLensToLaptop_Protocols[protocol][1].append(runningProtocolSumSent[protocol] / (bytesInKB * bytesInKB))
+                        # Reset the counter
+                        runningProtocolSumSent[protocol] = numOfBytes
+
+                    # Reset the counter variables
                     prevTimeStampSent = timeStamp
                     runningDataSumSent = numOfBytes
 
-
-            elif items[DESTINATION] == holoLensIPv4 and countThisItem:
+            elif items[DESTINATION] == holoLensIPv4:
 
                 received += numOfBytes
+                protocol = items[PROTOCOL]
+
+                # Create timeStamp and data slots if it's a newly observed protocol
+                if protocol not in laptopToHoloLens_Protocols:
+                    laptopToHoloLens_Protocols[protocol] = [], []
+                    runningProtocolSumRecvd[protocol] = 0
+                    # print("New :", protocol, "\nContent :", laptopToHoloLens_Protocols[protocol])
+
+                # If we're still within the same second, aggregate the data
                 if timeStamp == prevTimeStampReceived:
                     runningDataSumReceived += numOfBytes
+                    runningProtocolSumRecvd[protocol] = numOfBytes
+
+                # Otherwise, save the aggregated data for the last elapsed second
                 else:
                     laptopToHoloLens_timeStamps.append(prevTimeStampReceived)
-                    laptopToHoloLens_MB.append(runningDataSumReceived / (1024 * 1024.0))
+                    laptopToHoloLens_MB.append(runningDataSumReceived / (bytesInKB * bytesInKB))
+
+                    # Note down all the sums of the data received per protocol and reset count
+                    for protocol in laptopToHoloLens_Protocols:
+                        laptopToHoloLens_Protocols[protocol][0].append(prevTimeStampReceived)
+                        laptopToHoloLens_Protocols[protocol][1].append(runningProtocolSumRecvd[protocol] / (bytesInKB * bytesInKB))
+                        # Reset the counter
+                        runningProtocolSumRecvd[protocol] = numOfBytes
+
                     prevTimeStampReceived = timeStamp
                     runningDataSumReceived = numOfBytes
 
     # Communicate status to terminal
     print(  "{0:18}".format(label) + "{0:8}".format(holoLensName),
-            "Sent : {0:6,.2f} MB".format(sent/ (1024 * 1024.0)), "({0:3d} sec)  ".format(len(holoLensToLaptop_timeStamps)),
-            "Received : {0:6,.2f} MB".format(received/ (1024 * 1024.0)), "({0:3d} sec)".format(len(laptopToHoloLens_timeStamps))
+            "Sent : {0:6,.2f} MB".format(sent/ (bytesInKB * bytesInKB)), "({0:3d} sec)  ".format(len(holoLensToLaptop_timeStamps)),
+            "Received : {0:6,.2f} MB".format(received/ (bytesInKB * bytesInKB)), "({0:3d} sec)".format(len(laptopToHoloLens_timeStamps))
     )
-    return (holoLensToLaptop_timeStamps, holoLensToLaptop_MB, laptopToHoloLens_timeStamps, laptopToHoloLens_MB)
+    return (holoLensToLaptop_timeStamps, holoLensToLaptop_MB, holoLensToLaptop_Protocols,
+            laptopToHoloLens_timeStamps, laptopToHoloLens_MB, laptopToHoloLens_Protocols)
 
 #_______________________________________________________________________________
 
@@ -244,22 +284,6 @@ def getHLPerformanceStats(hlConsoleDump, firstTimeStamp):
         engineOneSum = 0
         restOfEnginesSum = 0
         itemsInThatSecond = 0
-
-        # Too lazy to write this out, or pass thousands of parameters around
-        # def incrementSums(items):
-        #     global cpuSum
-        #     global dedicatedMemSum
-        #     global systemMemSum
-        #     global engineOneSum
-        #     global restOfEnginesSum
-        #     global itemsInThatSecond
-        #
-        #     itemsInThatSecond += 1
-        #     cpuSum += int(items[1])
-        #     dedicatedMemSum += int(items[3])
-        #     systemMemSum += int(items[5])
-        #     engineOneSum += float(items[5][0])
-        #     restOfEnginesSum += float(items[5][1])
 
         for line in hlConsoleDump:
             items = line.split('\t')
@@ -365,34 +389,46 @@ def getCumSum(listOfValues):
         cumSumArray.append(cumsum)
     return cumSumArray
 
-def queryWiresharkStats(keyName, holoLensName, f = True):
+def queryWiresharkStats(keyName, holoLensName, usesTimeStamps = False):
     '''
     I was too lazy to re-type the method names each time...
     '''
-    return getWiresharkStats(keyName, data[keyName][0], holoLensName, data[keyName][1], udpFilter = f)
+    return getWiresharkStats(keyName, data[keyName][0], holoLensName, data[keyName][1])
 
 #_______________________________________________________________________________
 
 def main():
-    # wiresharkStats ==> hlToLap_timeStamps, hlToLap_packets, lapToHl_timeStamps, lapToHls_packets
+    # wiresharkStats ==> hlToLap_timeStamps, hlToLap_packets, hlToLap_protocols,
+    #                    lapToHl_timeStamps, lapToHl_packets, lapToHl_protocols
     # hlPerfStats ==> timeStamps, cpuLoad, dedicatedMemoryUsed, systemMemoryUsed, engineOne, restOfEngines
-    noDataChege = queryWiresharkStats('noData_data', 'Chege')
-    noDataMaria = queryWiresharkStats('noData_data', 'Maria')
-    chegeData4kV = queryWiresharkStats('4kVectors_data', 'Chege')
-    mariaData4kV = queryWiresharkStats('4kVectors_data', 'Maria')
-    chegeData8kV = queryWiresharkStats('8kVectors_data', 'Chege')
-    mariaData8kV = queryWiresharkStats('8kVectors_data', 'Maria')
+    # noDataChege = queryWiresharkStats('noData_data', 'Chege')
+    # noDataMaria = queryWiresharkStats('noData_data', 'Maria')
+    # chegeData4kV = queryWiresharkStats('4kVectors_data', 'Chege')
+    # mariaData4kV = queryWiresharkStats('4kVectors_data', 'Maria')
+    # chegeData8kV = queryWiresharkStats('8kVectors_data', 'Chege')
+    # mariaData8kV = queryWiresharkStats('8kVectors_data', 'Maria')
     chegeData12kI = queryWiresharkStats('12kInts_data', 'Chege')
-    mariaData12kI = queryWiresharkStats('12kInts_data', 'Maria')
+    # mariaData12kI = queryWiresharkStats('12kInts_data', 'Maria')
 
-    plotData = [
-        (getRange(chegeData12kI[0]), getCumSum(chegeData12kI[1]), "Chege to Laptop : All Protocols, 12k ints per sec"),
-        (getRange(chegeData12kI[2]), getCumSum(chegeData12kI[3]), "Laptop to Chege : All Protocols, 12k ints per sec"),
-        (getRange(mariaData12kI[0]), getCumSum(mariaData12kI[1]), "Maria to Laptop : All Protocols, 12k ints per sec"),
-        (getRange(mariaData12kI[2]), getCumSum(mariaData12kI[3]), "Laptop to Maria : All Protocols, 12k ints per sec")
-    ]
-    xyLabels = ['Time in Seconds', 'Cumulative Data Transferred in MB']
-    # compareDataOnGraph("Comparing General Data to UDP Protocol Data", plotData, xyLabels)
+    plotProtocolData = []
+    for protocol in chegeData12kI[2]:
+        cumulativeData = getCumSum(chegeData12kI[2][protocol][1])
+        print("Total under", protocol, " :", cumulativeData[-1])
+        plotProtocolData.append((
+            chegeData12kI[2][protocol][0],      # Time stamps
+            cumulativeData,                     # Cumulative data in MBs
+            "Chege to Laptop: " + protocol      # Label showing type of protocol
+        ))
+
+    # plotData = [
+    #     (getRange(chegeData12kI[0]), getCumSum(chegeData12kI[1]), "Chege to Laptop : All Protocols, 12k ints per sec"),
+    #     (getRange(chegeData12kI[3]), getCumSum(chegeData12kI[4]), "Laptop to Chege : All Protocols, 12k ints per sec"),
+    #     (getRange(mariaData12kI[0]), getCumSum(mariaData12kI[1]), "Maria to Laptop : All Protocols, 12k ints per sec"),
+    #     (getRange(mariaData12kI[3]), getCumSum(mariaData12kI[4]), "Laptop to Maria : All Protocols, 12k ints per sec")
+    # ]
+
+    xyLabels = ['Time', 'Cumulative Data Transferred in MB']
+    compareDataOnGraph("Comparing Data Transfer by Protocol", plotProtocolData, xyLabels, usesTimeStamps = True)
 
 #_______________________________________________________________________________
 
