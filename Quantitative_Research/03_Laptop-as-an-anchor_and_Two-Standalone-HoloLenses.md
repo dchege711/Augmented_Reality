@@ -28,7 +28,29 @@
 
 * The above data was collected for a HoloLens that was sending 12,000 integers per second to the network.
 * Of the 131.45 MB transferred, following distribution was observed:
+
     * TCP Protocol: 1.66 %
+      * The information in these packets is of the form:
+         * 443  >  50362 [FIN, ACK] Seq=2422 Ack=902 Win=66048 Len=0
+      * TCP provides reliable end-to-end connection. Lost packets are re-transmitted.
+         
     * TLSv1.2 Protocol : 6.36 %
+      * Most of the information in these packets is of the form:
+         * Server Hello, Certificate, Server Key Exchange, Server Hello Done
+         * Change Cipher Spec, Hello Request, Hello Request
+         * Application Data
+      * TLS is used to secure communications by providing privacy, authentication and data integrity.
+         
     * RTCP Protocol : 2.10 %
+      * Most of the information in these packets is of the form:
+         * Application specific   ( x\007 ) subtype=8[Malformed Packet]
+         * Payload-specific Feedback   Unknown  [Malformed Packet]
+         * Sender Report   (PSE:Unknown  PSE:Unknown  PSE:MS - TURN Server Bandwidth  PSE:Unknown  [Malformed Packet]
+         * Receiver Report   (PSE:Unknown  [Malformed Packet]
+         * Goodbye
+      * RTCP provides feedback on the Quality of Service, e.g. packet counts, packet loss, etc. RTCP doesn't transport any media data.
+ 
     * UDP Protocol : 89.88 %
+      * Most of the information in these packets is of the form:
+         * 63380  >  20601 Len=1432
+      * UDP has no connection setup, doesn't recover errors, nor does it guarantee message delivery. 
