@@ -11,3 +11,5 @@
 * [18th July, The 4 Waves of Augmented Reality (that Apple owns)](https://techcrunch.com/2017/07/18/the-four-waves-of-augmented-reality-that-apple-owns/).
    * Mobile AR Software, *e.g. ARKit, & Camera Effects*. Mobile AR Hardware, *e.g. Google Tango phones*. Tethered Smartglasses, *e.g. Meta*. Standalone Smartglasses, *e.g. Microsoft HoloLens*.
    * AR's 5 Consumer Challenges: hero device, all-day battery, mobile connectivity, app eco-system, telco cross-subsidization
+* [18th July, A New Chapter for Glass](https://blog.x.company/a-new-chapter-for-glass-c7875d40bf24)
+    * Google Glass isn't dead. They pivoted to industrial applications for the likes of General Electric and DHL. AR has been found suitable for industrial applications, but will it crack the consumer market? 
