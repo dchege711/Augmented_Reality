@@ -54,3 +54,5 @@
       * Most of the information in these packets is of the form:
          * *63380  >  20601 Len=1432*
       * UDP has no connection setup, doesn't recover errors, nor does it guarantee message delivery. 
+
+* Therefore, for transmitting data, UDP is the preferred protocol for the HoloLens. This isn't surprising considering UDP's fast nature and being less of a strain on the network. UDP is also favored in IoT applications.
