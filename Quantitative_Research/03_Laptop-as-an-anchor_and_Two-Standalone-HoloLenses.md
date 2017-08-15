@@ -6,7 +6,7 @@
 
 * Content:
    * [Overview of Data Types](#overview-of-data-types)
-   * [Protocols Used by the HoloLens](#protocols-used-by-the-holoLens)
+   * [Protocols Used by the HoloLens](#protocols-used-by-the-hololens)
 
 ## Overview of Data Types
 * The type of data that can be sent/received by the HoloLens depends on how the holograhic application was developed.
