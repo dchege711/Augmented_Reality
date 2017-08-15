@@ -24,7 +24,7 @@
 * Tristan Braud's 2017 paper, ['Future Networking Challenges: The Case of Mobile AR'](https://github.com/dchege711/Augmented_Reality/blob/master/Related_Work/2017_Tristan_Braud_Future_Networking_Challenges.md) proposes a need for a protocol designed for AR, lest AR applications prove unsustainable under the current (and projected) infrastructure.
 * We thus wanted to know what protocol is used by the HoloLens, and this is what we found:
 
-![Protocol_Distribution](https://github.com/dchege711/Augmented_Reality/blob/master/Images/Chege_to_HL_by_Protocol.PNG)
+![Protocol_Distribution](https://github.com/dchege711/Augmented_Reality/blob/master/Images/Chege_to_HL_by_Protocol.png)
 
 * The above data was collected for a HoloLens that was sending 12,000 integers per second to the network.
 * Of the 131.45 MB transferred, following distribution was observed:
