@@ -4,7 +4,13 @@
 
 ![Laptop-As-Anchor](https://github.com/dchege711/Augmented_Reality/blob/master/Images/Laptop_as_Anchor.png)
 
-* Unity apps written in C# have the following data types at their disposal:
+* Content:
+   * [Overview of Data Types](#overview-of-data-types)
+   * [Protocols Used by the HoloLens](#protocols-used-by-the-holoLens)
+
+## Overview of Data Types
+* The type of data that can be sent/received by the HoloLens depends on how the holograhic application was developed.
+* In our case, we used Unity and C#. Unity apps written in C# have the following data types at their disposal:
     * **int**
         * *e.g. 5 (4 bytes)*
         * Useful for identifying few items, e.g. if you want to ID 50 different HoloLenses
