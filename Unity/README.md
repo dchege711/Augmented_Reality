@@ -11,7 +11,7 @@
 ----
 
 ## [Mixed Reality Introduction (Holograms 100)](https://developer.microsoft.com/en-us/windows/mixed-reality/holograms_100)
-* This is the HelloWorld for the HoloLens. 
+* This is the HelloWorld for the HoloLens.
 * The objective is to create a floating hologram of a cube in front of you.
 * All of it was done within Unity's GUI; there are no C# scripts in this folder.
 * Follow the project so as to have an idea of what goes where in a hologram.
@@ -22,7 +22,7 @@
 * The linked tutorial is an introduction to holograms and the capabilities of a hololens.
 * The tutorial is fast-paced with lots of copy-paste. Slow down and examine the code.
 * It introduces concepts such as gaze, gestures, voice input, spatial sound and spatial mapping.
-* I've included a README of the observations I made along the way. The C# scripts are heavily commeneted.
+* I've included a README of the observations I made along the way. The C# scripts are heavily commented.
 
 ----
 
