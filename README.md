@@ -24,6 +24,6 @@
 
 #### Examples of AR experiences:
 
-![Doggo](https://github.com/dchege711/Augmented_Reality/blob/master/Images/Doggo.PNG)
+![Doggo](https://github.com/dchege711/Augmented_Reality/blob/master/Images/HL_Snapshot_Doggo.jpg)
 
-![HL_Snapshot_Close_up_Characters](https://github.com/dchege711/Augmented_Reality/blob/master/Images/HL_Snapshot_Close_up_Characters.PNG)
+![HL_Snapshot_Close_up_Characters](https://github.com/dchege711/Augmented_Reality/blob/master/Images/HL_Snapshot_Close_up_Characters.jpg)
