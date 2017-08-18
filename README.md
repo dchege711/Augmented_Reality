@@ -21,3 +21,9 @@
 
 ### Limitations of AR
 * We'll address limitations faced by AR technologies, e.g. graphics resolution, battery life, bulkiness, etc.
+
+#### Examples of AR experiences:
+
+![Doggo](https://github.com/dchege711/Augmented_Reality/blob/master/Images/Doggo.png)
+
+![HL_Snapshot_Close_up_Characters](https://github.com/dchege711/Augmented_Reality/blob/master/Images/HL_Snapshot_Close_up_Characters.png)
