@@ -1,5 +1,8 @@
 # AR In the News...
-
+* [29th Aug, 8th Wall release XR for smartphones](https://techcrunch.com/2017/08/28/8th-wall-wants-to-put-awesome-ar-experiences-on-more-smartphones/)
+  * XR is available as a free plug-in for Unity. It integrates with Apple's ARKit and Google's Tango. It will also enable (albeit limited) 3DoF AR functionality for general smartphones.
+* [28th Aug, Windows Mixed Reality Update](https://blogs.windows.com/windowsexperience/2017/08/28/windows-mixed-reality-holiday-update/)
+  * The Windows Mixed Reality team makes some bets on VR, offering built-in sensors, $399 headset + controller bundles and $499 mixed reality PCs. The HoloLens is conspicuously absent!
 * [4th Aug, Omega Ophthalmics's Lens Implant Platform](https://techcrunch.com/2017/08/04/ophthalmics-is-an-eye-implant-with-the-power-of-continuous-ar/)
    * They're creating a space in the eye for whoever wants to insert an [AR] implant. Still awaiting FDA approval. While this may face low uptake, lenses seem to be the most natural medium for AR. Phones, on the other hand, are the worst.
 * [2nd Aug, Asus' ZenFone AR - The 2nd Phone to Use Tango](https://www.theverge.com/circuitbreaker/2017/8/2/16087732/asus-zenfone-ar-google-tango-daydream-verizon-preorder-pricing)
@@ -12,4 +15,4 @@
    * Mobile AR Software, *e.g. ARKit, & Camera Effects*. Mobile AR Hardware, *e.g. Google Tango phones*. Tethered Smartglasses, *e.g. Meta*. Standalone Smartglasses, *e.g. Microsoft HoloLens*.
    * AR's 5 Consumer Challenges: hero device, all-day battery, mobile connectivity, app eco-system, telco cross-subsidization
 * [18th July, A New Chapter for Glass](https://blog.x.company/a-new-chapter-for-glass-c7875d40bf24)
-    * Google Glass isn't dead. They pivoted to industrial applications for the likes of General Electric and DHL. AR has been found suitable for industrial applications, but will it crack the consumer market? 
+    * Google Glass isn't dead. They pivoted to industrial applications for the likes of General Electric and DHL. AR has been found suitable for industrial applications, but will it crack the consumer market?
