@@ -512,7 +512,7 @@ PlayerSettings:
   metroCertificatePassword: 
   metroCertificateSubject: DefaultCompany
   metroCertificateIssuer: DefaultCompany
-  metroCertificateNotAfter: 002f155ad02ed401
+  metroCertificateNotAfter: 0071eff98d41d401
   metroApplicationDescription: MultiplayerShooterGame
   wsaImages: {}
   metroTileShortName: MultiplayerShooterGame
