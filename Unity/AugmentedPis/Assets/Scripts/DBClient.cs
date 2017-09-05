@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using System.Net.Sockets;
 using MongoDB.Driver;
 using MongoDB.Bson;
 
@@ -11,7 +12,8 @@ using MongoDB.Bson;
 
 /// <summary>
 /// Handles connections, reads and writes to MongoDB.
-/// Currently buggy: Complains of an ssl connection.
+/// Current Error Msgs
+/// LocalDB --> SocketException: No connection could be made because the target machine actively refused it./// AzureDB --> TlsException: The server stopped the handshake.
 /// </summary>
 public class DBClient : MonoBehaviour {
 
@@ -19,8 +21,8 @@ public class DBClient : MonoBehaviour {
     MongoServer server;
 
     void Start() {
-        string uri = "mongodb://ar-projects:sCQWaRWCzoS01RbIUNAL05dj0VlO9acJficROoIywMwm3DYRexg4e1J6IZwJmuJVvrVpfhD05QaCPWcsRlptjw==@ar-projects.documents.azure.com:10255/?ssl=true";
-        // string uri = "mongodb://localhost";
+        // string uri = "mongodb://ar-projects:sCQWaRWCzoS01RbIUNAL05dj0VlO9acJficROoIywMwm3DYRexg4e1J6IZwJmuJVvrVpfhD05QaCPWcsRlptjw==@ar-projects.documents.azure.com:10255/?ssl=true";
+        string uri = "mongodb://localhost";
 
         MongoClient client = new MongoClient(new MongoUrl(uri));
         server = client.GetServer();
