@@ -534,7 +534,7 @@ PlayerSettings:
       Bluetooth: True
       Chat: False
       CodeGeneration: False
-      EnterpriseAuthentication: False
+      EnterpriseAuthentication: True
       HumanInterfaceDevice: False
       InputInjectionBrokered: False
       InternetClient: True
@@ -548,7 +548,7 @@ PlayerSettings:
       PrivateNetworkClientServer: True
       Proximity: False
       RemovableStorage: False
-      SharedUserCertificates: False
+      SharedUserCertificates: True
       SpatialPerception: True
       UserAccountInformation: False
       VideosLibrary: False
