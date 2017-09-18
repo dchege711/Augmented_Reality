@@ -1,4 +1,5 @@
 # AR In the News...
+* [11th Sept, Why AR is About to Take Over Your World](https://www.buzzfeed.com/alexkantrowitz/why-augmented-reality-is-about-take-over-your-world?utm_term=.jy0ePAlxNz#.tbjv38zLZB)
 * [30th Aug, A Preview of iOS 11 AR Apps](https://techcrunch.com/2017/08/29/a-preview-of-the-first-wave-of-ar-apps-coming-to-iphones/)
   * Pretty cool demos, featuring [IKEA](https://youtu.be/qQZIzbuymrw), [Food Network](https://youtu.be/diwT51QDEpY), [GIPHY World](https://youtu.be/0adc0oCKKKI), [Arise](https://youtu.be/mK2dJAsCjGI), [The Very Hungry Caterpillar](https://youtu.be/TJ3yL_7asmA) and [The Walking Dead](https://youtu.be/ImC8BPP_xBA). These apps make Pokémon Go look primitive.
 * [29th Aug, ARCore for Android](https://developers.google.com/ar/)
