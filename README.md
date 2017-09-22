@@ -13,13 +13,13 @@
 * We'll consider the different AR devices in the market, and how they have fared.
 * Aside from gaming, we'll look at other uses of AR technologies across different devices.
 
-### Technology Research ...
+### Technology Research :white_check_mark:
 * We'll analyze the nitty-gritty details, e.g. how an AR device maps its environment, communication protocols, computational ability (important to fog computing), etc.
 
-### Multiuser Scenarios ...
+### Multiuser Scenarios :white_check_mark:
 * We'll explore how multiple AR devices can interact with each other in the augmented space.
 
-### Limitations of AR
+### Limitations of AR :white_check_mark:
 * We'll address limitations faced by AR technologies, e.g. graphics resolution, battery life, bulkiness, etc.
 
 #### Examples of AR experiences:
