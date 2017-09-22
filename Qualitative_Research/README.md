@@ -1,4 +1,6 @@
 # AR In the News...
+* [22nd Sept, 2017: Ford is now designing cars in MR using Microsoft HoloLens](https://techcrunch.com/2017/09/22/ford-is-now-designing-cars-in-mixed-reality-using-microsoft-hololens/?ncid=rss&utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3A+Techcrunch+%28TechCrunch%29)
+  * It's a test program, but Ford has reduced the time needed for making and reviewing changes from a few weeks to days.
 * [21st Sept, 2017: Super Accurate GPS Chips Coming to Smartphones in 2018](https://spectrum.ieee.org/tech-talk/semiconductors/design/superaccurate-gps-chips-coming-to-smartphones-in-2018)
   * Registration of the device is one of the hard problems in AR. Broadcomm's chips are poised to be accurate to 30cm as opposed to 5m.
 * [11th Sept, 2017: Why AR is About to Take Over Your World](https://www.buzzfeed.com/alexkantrowitz/why-augmented-reality-is-about-take-over-your-world?utm_term=.jy0ePAlxNz#.tbjv38zLZB)
