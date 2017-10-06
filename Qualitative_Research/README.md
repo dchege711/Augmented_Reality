@@ -1,4 +1,6 @@
 # AR In the News...
+* [5th Oct, 2017: Google's AR Ambitions Push VR to the Back Seat](https://www.engadget.com/2017/10/05/google-ar-ambitions/)
+  * Title says it all. The AR stickers built into the Pixel's camera might go big - Stranger Things, and in the near future, YouTube, SNL, NBA, Star Wars, etc. 
 * [22nd Sept, 2017: Ford is now designing cars in MR using Microsoft HoloLens](https://techcrunch.com/2017/09/22/ford-is-now-designing-cars-in-mixed-reality-using-microsoft-hololens/?ncid=rss&utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3A+Techcrunch+%28TechCrunch%29)
   * It's a test program, but Ford has reduced the time needed for making and reviewing changes from a few weeks to days.
 * [21st Sept, 2017: Super Accurate GPS Chips Coming to Smartphones in 2018](https://spectrum.ieee.org/tech-talk/semiconductors/design/superaccurate-gps-chips-coming-to-smartphones-in-2018)
