@@ -1,4 +1,6 @@
 # AR In the News...
+* [12th Oct, 2017: Google's Anti-Amazon Alliance](https://www.recode.net/2017/10/12/16464132/google-target-retailers-amazon-walmart-assistant-alexa-home-echo-augmented-reality)
+  * Retail is a way of bringing AR to the masses. Google is positioning itself as a platform such that people don't have to downlaod multiple AR apps.
 * [5th Oct, 2017: Google's AR Ambitions Push VR to the Back Seat](https://www.engadget.com/2017/10/05/google-ar-ambitions/)
   * Title says it all. The AR stickers built into the Pixel's camera might go big - Stranger Things, and in the near future, YouTube, SNL, NBA, Star Wars, etc. 
 * [22nd Sept, 2017: Ford is now designing cars in MR using Microsoft HoloLens](https://techcrunch.com/2017/09/22/ford-is-now-designing-cars-in-mixed-reality-using-microsoft-hololens/?ncid=rss&utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3A+Techcrunch+%28TechCrunch%29)
